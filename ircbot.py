@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.7 2003/08/22 19:39:43 jrosdahl Exp $
+# $Id: ircbot.py,v 1.8 2003/08/28 21:04:50 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -58,6 +58,9 @@ class SingleServerIRCBot(SimpleIRCClient):
 
             reconnection_interval -- How long the bot should wait
                                      before trying to reconnect.
+
+            dcc_connections -- A list of initiated/accepted DCC
+            connections.
         """
 
         SimpleIRCClient.__init__(self)
@@ -221,7 +224,8 @@ class SingleServerIRCBot(SimpleIRCClient):
     def on_ctcp(self, c, e):
         """Default handler for ctcp events.
 
-        Replies to VERSION and PING requests.
+        Replies to VERSION and PING requests and relays DCC requests
+        to the on_dccchat method.
         """
         if e.arguments()[0] == "VERSION":
             c.ctcp_reply(nm_to_n(e.source()), self.get_version())
@@ -229,6 +233,11 @@ class SingleServerIRCBot(SimpleIRCClient):
             if len(e.arguments()) > 1:
                 c.ctcp_reply(nm_to_n(e.source()),
                              "PING " + e.arguments()[1])
+        elif e.arguments()[0] == "DCC":
+            self.on_dccchat(c, e)
+
+    def on_dccchat(self, c, e):
+        pass
 
     def start(self):
         """Start the bot."""
