@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.15 2003/08/31 08:58:20 jrosdahl Exp $
+# $Id: irclib.py,v 1.16 2003/08/31 13:16:25 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -600,6 +600,13 @@ class ServerConnection(Connection):
         See documentation for IRC.add_global_handler.
         """
         apply(self.irclibobj.add_global_handler, args)
+
+    def remove_global_handler(self, *args):
+        """Remove global handler.
+
+        See documentation for IRC.remove_global_handler.
+        """
+        apply(self.irclibobj.remove_global_handler, args)
 
     def action(self, target, action):
         """Send a CTCP ACTION command."""
