@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.10 2003/08/31 13:20:09 jrosdahl Exp $
+# $Id: ircbot.py,v 1.11 2003/08/31 13:25:11 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -228,7 +228,8 @@ class SingleServerIRCBot(SimpleIRCClient):
         to the on_dccchat method.
         """
         if e.arguments()[0] == "VERSION":
-            c.ctcp_reply(nm_to_n(e.source()), self.get_version())
+            c.ctcp_reply(nm_to_n(e.source()),
+                         "VERSION " + self.get_version())
         elif e.arguments()[0] == "PING":
             if len(e.arguments()) > 1:
                 c.ctcp_reply(nm_to_n(e.source()),
