@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.22 2004/07/09 08:33:54 jrosdahl Exp $
+# $Id: irclib.py,v 1.23 2004/07/09 08:54:40 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -74,7 +74,7 @@ import sys
 import time
 import types
 
-VERSION = 0, 4, 1
+VERSION = 0, 4, 2
 DEBUG = 0
 
 # TODO
