@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.7 2002/02/16 22:09:46 jrosdahl Exp $
+# $Id: irclib.py,v 1.8 2002/02/16 22:10:29 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -74,7 +74,7 @@ import sys
 import time
 import types
 
-VERSION = 0, 3, 0
+VERSION = 0, 3, 1
 DEBUG = 0
 
 # TODO
@@ -213,8 +213,11 @@ class IRC:
         """
         sockets = map(lambda x: x._get_socket(), self.connections)
         sockets = filter(lambda x: x != None, sockets)
-        (i, o, e) = select.select(sockets, [], [], timeout)
-        self.process_data(i)
+        if sockets:
+            (i, o, e) = select.select(sockets, [], [], timeout)
+            self.process_data(i)
+        else:
+            time.sleep(timeout)
         self.process_timeout()
 
     def process_forever(self, timeout=0.2):

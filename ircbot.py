@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.3 2002/02/16 22:09:46 jrosdahl Exp $
+# $Id: ircbot.py,v 1.4 2002/02/16 22:10:29 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -40,7 +40,8 @@ class SingleServerIRCBot(SimpleIRCClient):
 
     The bot keeps track of the channels it has joined, the other
     clients that are present in the channels and which of those that
-    have operator or voice modes.
+    have operator or voice modes.  The "database" is kept in the
+    self.channels attribute, which is an IRCDict of Channels.
     """
     def __init__(self, server_list, nickname, realname, reconnection_interval=60):
         """Constructor for SingleServerIRCBot objects.
