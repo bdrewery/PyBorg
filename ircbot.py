@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.4 2002/02/16 22:10:29 jrosdahl Exp $
+# $Id: ircbot.py,v 1.5 2002/02/16 22:11:52 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -30,7 +30,7 @@ from UserDict import UserDict
 
 from irclib import SimpleIRCClient
 from irclib import nm_to_n, irc_lower, all_events
-from irclib import parse_channel_modes, is_channel, is_channel
+from irclib import parse_channel_modes, is_channel
 from irclib import ServerConnectionError
 
 class SingleServerIRCBot(SimpleIRCClient):
