@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.18 2005/01/17 22:09:07 jrosdahl Exp $
+# $Id: ircbot.py,v 1.19 2005/01/19 08:57:29 keltus Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -287,6 +287,8 @@ class IRCDict:
         ck = irc_lower(key)
         del self.data[self.canon_keys[ck]]
         del self.canon_keys[ck]
+    def __iter__(self):
+        return iter(self.data)
     def __contains__(self, key):
         return self.has_key(key)
     def clear(self):
