@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.28 2005/01/26 04:57:58 keltus Exp $
+# $Id: irclib.py,v 1.29 2005/01/29 02:16:27 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -453,7 +453,6 @@ class ServerConnection(Connection):
         """
 
         self.disconnect("Closing object")
-        self.irclibobj._remove_connection(self)
 
     def _get_socket(self):
         """[Internal]"""
@@ -650,6 +649,7 @@ class ServerConnection(Connection):
         if not self.connected:
             return
 
+        self.irclibobj._remove_connection(self)
         self.connected = 0
         try:
             self.socket.close()
