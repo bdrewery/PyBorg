@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.24 2005/01/17 21:29:58 jrosdahl Exp $
+# $Id: irclib.py,v 1.25 2005/01/17 21:38:49 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -763,6 +763,8 @@ class ServerConnection(Connection):
 
     def quit(self, message=""):
         """Send a QUIT command."""
+        # Note that many IRC servers don't use your QUIT message
+        # unless you've been connected for at least 5 minutes!
         self.send_raw("QUIT" + (message and (" :" + message)))
 
     def sconnect(self, target, port="", server=""):
