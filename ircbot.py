@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.6 2002/02/16 23:00:05 jrosdahl Exp $
+# $Id: ircbot.py,v 1.7 2003/08/22 19:39:43 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -208,7 +208,7 @@ class SingleServerIRCBot(SimpleIRCClient):
         return "ircbot.py by Joel Rosdahl <joel@rosdahl.net>"
 
     def jump_server(self):
-        """Connect to a new server, possible disconnecting from the current.
+        """Connect to a new server, possibly disconnecting from the current.
 
         The bot will skip to next server in the server_list each time
         jump_server is called.
