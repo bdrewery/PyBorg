@@ -18,7 +18,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.4 2002/02/16 22:05:23 jrosdahl Exp $
+# $Id: irclib.py,v 1.5 2002/02/16 22:06:25 jrosdahl Exp $
 
 """irclib -- IRC protocol client library.
 
@@ -42,7 +42,7 @@ import sys
 import time
 import types
 
-VERSION = 0, 2, 2
+VERSION = 0, 2, 3
 DEBUG = 0
 
 # TODO
@@ -278,7 +278,7 @@ class ServerConnection(Connection):
         self.localhost = socket.gethostname()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            self.socket.connect(self.server, self.port)
+            self.socket.connect((self.server, self.port))
         except socket.error, x:
             raise ServerConnectionError, "Couldn't connect to socket: %s" % x
         self.connected = 1
