@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.12 2003/08/31 13:44:04 jrosdahl Exp $
+# $Id: ircbot.py,v 1.13 2003/08/31 14:06:39 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -58,6 +58,9 @@ class SingleServerIRCBot(SimpleIRCClient):
 
             reconnection_interval -- How long the bot should wait
                                      before trying to reconnect.
+
+            dcc_connections -- A list of initiated/accepted DCC
+            connections.
         """
 
         SimpleIRCClient.__init__(self)
