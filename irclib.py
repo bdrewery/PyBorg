@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.21 2003/10/30 06:27:42 jrosdahl Exp $
+# $Id: irclib.py,v 1.22 2004/07/09 08:33:54 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -362,6 +362,9 @@ class Connection:
 
 
 class ServerConnectionError(IRCError):
+    pass
+
+class ServerNotConnectedError(ServerConnectionError):
     pass
 
 
@@ -770,6 +773,8 @@ class ServerConnection(Connection):
 
         The string will be padded with appropriate CR LF.
         """
+        if self.socket is None:
+            raise ServerNotConnectedError, "Not connected."
         try:
             self.socket.send(string + "\r\n")
             if DEBUG:
