@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.16 2003/08/31 13:16:25 jrosdahl Exp $
+# $Id: irclib.py,v 1.17 2003/08/31 13:17:55 jrosdahl Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -498,6 +498,9 @@ class ServerConnection(Connection):
         for line in lines:
             if DEBUG:
                 print "FROM SERVER:", line
+
+            if not line:
+                continue
 
             prefix = None
             command = None
