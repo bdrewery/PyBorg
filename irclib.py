@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.30 2005/02/24 01:25:50 keltus Exp $
+# $Id: irclib.py,v 1.31 2005/04/03 06:56:29 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -734,12 +734,12 @@ class ServerConnection(Connection):
         """Send an OPER command."""
         self.send_raw("OPER %s %s" % (nick, password))
 
-    def part(self, channels):
+    def part(self, channels, message=""):
         """Send a PART command."""
         if type(channels) == types.StringType:
-            self.send_raw("PART " + channels)
+            self.send_raw("PART " + channels + (message and (" " + message)))
         else:
-            self.send_raw("PART " + string.join(channels, ","))
+            self.send_raw("PART " + string.join(channels, ",") + (message and (" " + message)))
 
     def pass_(self, password):
         """Send a PASS command."""
@@ -1547,6 +1547,8 @@ protocol_events = [
     "pubmsg",
     "pubnotice",
     "quit",
+    "invite",
+    "pong",
 ]
 
 all_events = generated_events + protocol_events + numeric_events.values()
