@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.8 2003/08/28 21:04:50 jrosdahl Exp $
+# $Id: ircbot.py,v 1.9 2003/08/31 08:54:52 jrosdahl Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -233,7 +233,7 @@ class SingleServerIRCBot(SimpleIRCClient):
             if len(e.arguments()) > 1:
                 c.ctcp_reply(nm_to_n(e.source()),
                              "PING " + e.arguments()[1])
-        elif e.arguments()[0] == "DCC":
+        elif e.arguments()[0] == "DCC" and e.arguments()[1] = "CHAT":
             self.on_dccchat(c, e)
 
     def on_dccchat(self, c, e):
