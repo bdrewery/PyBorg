@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.26 2005/01/17 21:56:05 jrosdahl Exp $
+# $Id: irclib.py,v 1.27 2005/01/24 02:15:50 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -194,7 +194,7 @@ class IRC:
         t = time.time()
         while self.delayed_commands:
             if t >= self.delayed_commands[0][0]:
-                apply(self.delayed_commands[0][1], self.delayed_commands[0][2])
+                self.delayed_commands[0][1](*self.delayed_commands[0][2])
                 del self.delayed_commands[0]
             else:
                 break
@@ -612,14 +612,14 @@ class ServerConnection(Connection):
 
         See documentation for IRC.add_global_handler.
         """
-        apply(self.irclibobj.add_global_handler, args)
+        self.irclibobj.add_global_handler(*args)
 
     def remove_global_handler(self, *args):
         """Remove global handler.
 
         See documentation for IRC.remove_global_handler.
         """
-        apply(self.irclibobj.remove_global_handler, args)
+        self.irclibobj.remove_global_handler(*args)
 
     def action(self, target, action):
         """Send a CTCP ACTION command."""
