@@ -18,15 +18,15 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: irclib.py,v 1.3 2002/02/16 22:04:28 jrosdahl Exp $
+# $Id: irclib.py,v 1.4 2002/02/16 22:05:23 jrosdahl Exp $
 
 """irclib -- IRC protocol client library.
 
 This library is intended to encapsulate the IRC protocol at a quite
 low level.  Clients are written by registering callbacks (i.e. not by
-inheriting a class), to make it able to use different programming
-paradigms easily.  (It should be quite easy to write an
-object-oriented wrapper for one server connection, for example.)
+inheriting a class), to make it easy to use different programming
+paradigms.  (It should be quite easy to write an object-oriented
+wrapper for one server connection, for example.)
 
 The class hierarchy is inspired by the Perl IRC module (Net::IRC).
 
@@ -42,7 +42,7 @@ import sys
 import time
 import types
 
-VERSION = 0, 2, 1
+VERSION = 0, 2, 2
 DEBUG = 0
 
 # TODO
@@ -254,7 +254,7 @@ class ServerConnection(Connection):
         Connection.__init__(self, irclibobj)
         self.connected = 0  # Not connected yet.
 
-    def connect(self, server, port, nickname, username, ircname, password=None):
+    def connect(self, server, port, nickname, password=None, username=None, ircname=None):
         """(Re)connect to a server.
 
         This function can be called to reconnect a closed connection.
@@ -272,8 +272,8 @@ class ServerConnection(Connection):
         self.server = server
         self.port = port
         self.nickname = nickname
-        self.username = username
-        self.ircname = ircname
+        self.username = username or nickname
+        self.ircname = ircname or nickname
         self.password = password
         self.localhost = socket.gethostname()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -605,7 +605,7 @@ class ServerConnection(Connection):
         self.send_raw("TRACE" + (target and (" " + target)))
 
     def user(self, username, localhost, server, ircname):
-        self.send_raw("USER %s * * :%s" % (username, localhost, server, ircname))
+        self.send_raw("USER %s %s %s :%s" % (username, localhost, server, ircname))
 
     def userhost(self, nicks):
         self.send_raw("USERHOST " + string.join(nicks, ","))
