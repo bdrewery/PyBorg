@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.32 2005/04/17 19:03:07 keltus Exp $
+# $Id: irclib.py,v 1.33 2005/04/26 17:11:29 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -118,7 +118,7 @@ class IRC:
         server = irc.server()
         server.connect(\"irc.some.where\", 6667, \"my_nickname\")
         server.privmsg(\"a_nickname\", \"Hi there!\")
-        server.process_forever()
+        irc.process_forever()
 
     This will connect to the IRC server irc.some.where on port 6667
     using the nickname my_nickname and send the message \"Hi there!\"
