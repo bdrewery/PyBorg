@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.33 2005/04/26 17:11:29 keltus Exp $
+# $Id: irclib.py,v 1.34 2005/05/18 05:38:47 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -382,6 +382,7 @@ class ServerConnection(Connection):
     def __init__(self, irclibobj):
         Connection.__init__(self, irclibobj)
         self.connected = 0  # Not connected yet.
+        self.socket = None
 
     def connect(self, server, port, nickname, password=None, username=None,
                 ircname=None, localaddress="", localport=0):
