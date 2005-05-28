@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.35 2005/05/18 19:40:41 keltus Exp $
+# $Id: irclib.py,v 1.36 2005/05/28 20:55:15 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -580,7 +580,7 @@ class ServerConnection(Connection):
                 target = None
 
                 if command == "quit":
-                    arguments = [arguments[0]]
+                    arguments = arguments[0]
                 elif command == "ping":
                     target = arguments[0]
                 else:
