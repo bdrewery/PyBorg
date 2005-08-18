@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.36 2005/05/28 20:55:15 keltus Exp $
+# $Id: irclib.py,v 1.37 2005/08/18 20:11:22 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -235,7 +235,6 @@ class IRC:
     def disconnect_all(self, message=""):
         """Disconnects all connections."""
         for c in self.connections:
-            c.quit(message)
             c.disconnect(message)
 
     def add_global_handler(self, event, handler, priority=0):
@@ -411,9 +410,8 @@ class ServerConnection(Connection):
         Returns the ServerConnection object.
         """
         if self.connected:
-            self.quit("Changing servers")
+            self.disconnect("Changing servers")
 
-        self.socket = None
         self.previous_buffer = ""
         self.handlers = {}
         self.real_server_name = ""
@@ -650,6 +648,8 @@ class ServerConnection(Connection):
         """
         if not self.connected:
             return
+
+        self.quit(message)
 
         self.connected = 0
         try:

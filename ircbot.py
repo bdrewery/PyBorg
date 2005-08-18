@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.19 2005/01/19 08:57:29 keltus Exp $
+# $Id: ircbot.py,v 1.20 2005/08/18 20:11:22 keltus Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -189,7 +189,8 @@ class SingleServerIRCBot(SimpleIRCClient):
 
             msg -- Quit message.
         """
-        self.connection.quit(msg)
+
+        self.connection.disconnect(msg)
         sys.exit(0)
 
     def disconnect(self, msg="I'll be back!"):
@@ -201,7 +202,7 @@ class SingleServerIRCBot(SimpleIRCClient):
 
             msg -- Quit message.
         """
-        self.connection.quit(msg)
+        self.connection.disconnect(msg)
 
     def get_version(self):
         """Returns the bot version.
@@ -217,13 +218,8 @@ class SingleServerIRCBot(SimpleIRCClient):
         jump_server is called.
         """
         if self.connection.is_connected():
-            self.connection.quit(msg)
-            self.connected = 0
-            try:
-                self.connection.socket.close()
-            except socket.error, x:
-                pass
-            self.socket = None
+            self.connection.disconnect(msg)
+
         self.server_list.append(self.server_list.pop(0))
         self._connect()
 
