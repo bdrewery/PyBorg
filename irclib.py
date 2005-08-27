@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.37 2005/08/18 20:11:22 keltus Exp $
+# $Id: irclib.py,v 1.38 2005/08/27 21:03:58 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -649,9 +649,10 @@ class ServerConnection(Connection):
         if not self.connected:
             return
 
+        self.connected = 0
+
         self.quit(message)
 
-        self.connected = 0
         try:
             self.socket.close()
         except socket.error, x:
