@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.38 2005/08/27 21:03:58 keltus Exp $
+# $Id: irclib.py,v 1.39 2005/11/04 00:38:14 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -57,10 +57,6 @@ Current limitations:
   * There are no support for DCC connections.
   * The author haven't even read RFC 2810, 2811, 2812 and 2813.
   * Like most projects, documentation is lacking...
-
-Since I seldom use IRC anymore, I will probably not work much on the
-library.  If you want to help or continue developing the library,
-please contact me (Joel Rosdahl <joel@rosdahl.net>).
 
 .. [IRC specifications] http://www.irchelp.org/irchelp/rfc/
 """
