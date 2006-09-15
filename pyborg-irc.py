@@ -320,7 +320,7 @@ class ModIRC(SingleServerIRCBot):
 			replyrate = 100
 
 		# Pass message onto pyborg
-		if source in self.owners and self.owner_mask == e.source():
+		if source in self.owners and e.source() in self.owner_mask:
 			self.pyborg.process_msg(self, body, replyrate, learn, (body, source, target, c, e), owner=1)
 		else:
 #			self.pyborg.process_msg(self, body, replyrate, learn, (body, source, target, c, e))
