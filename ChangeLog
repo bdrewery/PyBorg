@@ -2,20 +2,16 @@ PyBorg ChangeLog
 
 ~~~~~~~~~~~~~~~~
 
-v1.1.1 - 04/9/2006
-~~~~~~~~~~~~~~~~~~
-
-* Added a !owner command with password for beiing owner of the bot
-* Minor fixes
-
-~~~~~~~~~~~~~~~~
-
 v1.1.0 - 15/8/2006
 ~~~~~~~~~~~~~~~~~~
 
+* Added a msn interface
+
+* Added a megahal interface
+
 * Rewritted the reply routine. Now PyBorg use a markov chain system.
 
-* Added a !talk command for make the bot talk to somebody
+* Added a !talk command for make the bot talk to somebody on IRC
 
 * Added !purge command. It purge the dictionary for words who are very rare.
 

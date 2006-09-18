@@ -26,7 +26,7 @@ try:
 	from ircbot import *
 	from irclib import *
 except:
-	print "ERROR !!!!\nircbot.py and irclib.py not found, please install them"
+	print "ERROR !!!!\nircbot.py and irclib.py not found, please install them\n( http://python-irclib.sourceforge.net/ )"
 	sys.exit(1)
 
 #overide irclib function
@@ -188,29 +188,6 @@ class ModIRC(SingleServerIRCBot):
 			#print "["+get_time()+"] <--  "+kicked+" was kicked off "+`target`+" by "+kicker+" ("+reason+")"
 			print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
 
-#	def on_join(self, c, e):
-#		"""
-#		Process joining
-#		"""
-#		# Parse Nickname!username@host.mask.net to Nickname
-#		source = e.source().split("!")[0]
-#		target = e.target()
-#
-#		# Converts joins to "someone is here", to give the bot
-#		# something to work on.
-#		# eg. "%s is here" % source
-#		body = self.join_msg % source
-#
-#		#print "["+get_time()+"] -->  "+source+" joined "+target
-#
-#		# We want reply rate % chance, if speaking is on
-#		replyrate = self.settings.speaking * self.settings.reply_chance / 3
-#
-#		# Learn from 'someone has left'
-#		self.pyborg.process_msg(self, body, 0, 1, (body, source, target, c, e))
-#		# (possibly) reply to 'someone'
-#		self.pyborg.process_msg(self, source, replyrate, 0, (body, source, target, c, e))
-		
 	def on_privmsg(self, c, e):
 		self.on_msg(c, e)
 	
@@ -247,14 +224,6 @@ class ModIRC(SingleServerIRCBot):
 			self.owner_mask.append(e.source())
 			print "Locked owner as %s" % e.source()
 
-		# WHOOHOOO!!
-		if target == self.settings.myname or source == self.settings.myname:
-			print "[%s] <%s> > %s> %s" % ( get_time(), source, target, message)
-
-
-		# Ignore self.
-		if source == self.settings.myname: return
-
 		# Message text
 		if len(e.arguments()) == 1:
 			# Normal message
@@ -274,6 +243,14 @@ class ModIRC(SingleServerIRCBot):
 				if body[x].isdigit() == 0:
 					break
 			body = body[x:]
+
+		# WHOOHOOO!!
+		if target == self.settings.myname or source == self.settings.myname:
+			print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
+
+		# Ignore self.
+		if source == self.settings.myname: return
+
 
 		#replace nicknames by "#nick"
 		if e.eventtype() == "pubmsg":

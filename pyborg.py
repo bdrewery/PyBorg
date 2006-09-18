@@ -34,7 +34,7 @@ import cfgfile
 import zipfile
 import thread
 
-def filter_message(message, aliases):
+def filter_message(message, bot):
 	"""
 	Filter a message body so it is suitable for learning from and
 	replying to. This involves removing confusing characters,
@@ -80,10 +80,11 @@ def filter_message(message, aliases):
 
 
 	words = message.split()
-	for x in range(0, len(words)):
-		#is there aliases ?
-		for z in aliases.keys():
-			if words[x] in aliases[z]: words[x] = z
+	if bot.settings.process_with == "pyborg":
+		for x in range(0, len(words)):
+			#is there aliases ?
+			for z in bot.settings.aliases.keys():
+				if words[x] in bot.settings.aliases[z]: words[x] = z
 
 	message = " ".join(words)
 	return message
@@ -128,128 +129,131 @@ class pyborg:
 			  "ignore_list":("Words that can be ignored for the answer", []),
 			  "censored":	("These words may be learnt but will never be used", []),
 			  "num_aliases":("Total of aliases known", 0),
-			  "aliases":	("A list of similars words", {})
+			  "aliases":	("A list of similars words", {}),
+			  "process_with":("Wich way for generate the reply ( pyborg|megahal)", "pyborg")
 			} )
 
 		# Read the dictionary
-		print "Reading dictionary..."
-		try:
-			zfile = zipfile.ZipFile('archive.zip','r')
-			for filename in zfile.namelist():
-				data = zfile.read(filename)
-				file = open(filename, 'w+b')
-				file.write(data)
-				file.close()
-		except (EOFError, IOError), e:
-			print "no zip found"
-		try:
-			f = open("words.dat", "rb")
-			s = f.read()
-			f.close()
-			self.words = marshal.loads(s)
-			del s
-			f = open("lines.dat", "rb")
-			s = f.read()
-			f.close()
-			self.lines = marshal.loads(s)
-			del s
-		except (EOFError, IOError), e:
-			# Create mew database
-			self.words = {}
-			self.lines = {}
-			print "Error reading saves. New database created."
+		if self.settings.process_with == "pyborg":
+			print "Reading dictionary..."
+			try:
+				zfile = zipfile.ZipFile('archive.zip','r')
+				for filename in zfile.namelist():
+					data = zfile.read(filename)
+					file = open(filename, 'w+b')
+					file.write(data)
+					file.close()
+			except (EOFError, IOError), e:
+				print "no zip found"
+			try:
+				f = open("words.dat", "rb")
+				s = f.read()
+				f.close()
+				self.words = marshal.loads(s)
+				del s
+				f = open("lines.dat", "rb")
+				s = f.read()
+				f.close()
+				self.lines = marshal.loads(s)
+				del s
+			except (EOFError, IOError), e:
+				# Create mew database
+				self.words = {}
+				self.lines = {}
+				print "Error reading saves. New database created."
 
-		# Is a resizing required?
-		if len(self.words) != self.settings.num_words:
-			print "Updating dictionary information..."
-			self.settings.num_words = len(self.words)
-			num_contexts = 0
-			# Get number of contexts
-			for x in self.lines.keys():
-				num_contexts += len(self.lines[x][0]).split()
-			self.settings.num_contexts = num_contexts
-			# Save new values
-			self.settings.save()
-			
-		# Is an aliases update required ?
-		compteur = 0
-		for x in self.settings.aliases.keys():
-			compteur += len(self.settings.aliases[x])
-		if compteur != self.settings.num_aliases:
-			self.settings.num_aliases = compteur
+			# Is a resizing required?
+			if len(self.words) != self.settings.num_words:
+				print "Updating dictionary information..."
+				self.settings.num_words = len(self.words)
+				num_contexts = 0
+				# Get number of contexts
+				for x in self.lines.keys():
+					num_contexts += len(self.lines[x][0]).split()
+				self.settings.num_contexts = num_contexts
+				# Save new values
+				self.settings.save()
+				
+			# Is an aliases update required ?
+			compteur = 0
 			for x in self.settings.aliases.keys():
-				for y in self.settings.aliases[x]:
-					if self.words.has_key(y):
-						print 'replace', y, ' with ', x
-						self.replace(y, x)
-			for x in self.words.keys():
-				if not (x in self.settings.aliases.keys()) and x[0] == '~':
-					print "unlearn %s" % x
-					self.settings.num_aliases -= 1
-					self.unlearn(x)
-					print "unlearnd aliases %s" % x
+				compteur += len(self.settings.aliases[x])
+			if compteur != self.settings.num_aliases:
+				self.settings.num_aliases = compteur
+				for x in self.settings.aliases.keys():
+					for y in self.settings.aliases[x]:
+						if self.words.has_key(y):
+							print 'replace', y, ' with ', x
+							self.replace(y, x)
+				for x in self.words.keys():
+					if not (x in self.settings.aliases.keys()) and x[0] == '~':
+						print "unlearn %s" % x
+						self.settings.num_aliases -= 1
+						self.unlearn(x)
+						print "unlearnd aliases %s" % x
 
 
-		#unlearn words in the unlearn.txt file.
-		try:
-			f = open("unlearn.txt", "r")
-			while 1:
-				word = f.readline().strip('\n')
-				if word == "":
-					break
-				if self.words.has_key(word):
-					self.unlearn(word)
-			f.close()
-		except (EOFError, IOError), e:
-			# No words to unlearn
-			pass
+			#unlearn words in the unlearn.txt file.
+			try:
+				f = open("unlearn.txt", "r")
+				while 1:
+					word = f.readline().strip('\n')
+					if word == "":
+						break
+					if self.words.has_key(word):
+						self.unlearn(word)
+				f.close()
+			except (EOFError, IOError), e:
+				# No words to unlearn
+				pass
 
 		self.save_all()
 
 
 
 	def save_all(self):
-		print "Writing dictionary..."
+		if self.settings.process_with == "pyborg":
+			print "Writing dictionary..."
 
-		try:
-			zfile = zipfile.ZipFile('archive.zip','r')
-			for filename in zfile.namelist():
-				data = zfile.read(filename)
-				file = open(filename, 'w+b')
-				file.write(data)
-				file.close()
-		except (OSError, IOError), e:
-			print "no zip found. Is the programm launch for first time ?"
-
-
-		f = open("words.dat", "wb")
-		s = marshal.dumps(self.words)
-		f.write(s)
-		f.close()
-		f = open("lines.dat", "wb")
-		s = marshal.dumps(self.lines)
-		f.write(s)
-		f.close()
-
-		#save the version
-		f = open("version", "w")
-		f.write("1.1.0")
-		f.close()
+			try:
+				zfile = zipfile.ZipFile('archive.zip','r')
+				for filename in zfile.namelist():
+					data = zfile.read(filename)
+					file = open(filename, 'w+b')
+					file.write(data)
+					file.close()
+			except (OSError, IOError), e:
+				print "no zip found. Is the programm launch for first time ?"
 
 
-		#zip the files
-		f = zipfile.ZipFile('archive.zip','w',zipfile.ZIP_DEFLATED)
-		f.write('words.dat')
-		f.write('lines.dat')
-		f.write('version')
-		f.close()
+			f = open("words.dat", "wb")
+			s = marshal.dumps(self.words)
+			f.write(s)
+			f.close()
+			f = open("lines.dat", "wb")
+			s = marshal.dumps(self.lines)
+			f.write(s)
+			f.close()
 
-		try:		
-			os.remove('words.dat')
-			os.remove('lines.dat')
-			os.remove('version')
-		except (OSError, IOError), e:
-			print "could not remove the files"
+			#save the version
+			f = open("version", "w")
+			f.write("1.1.0")
+			f.close()
+
+
+			#zip the files
+			f = zipfile.ZipFile('archive.zip','w',zipfile.ZIP_DEFLATED)
+			f.write('words.dat')
+			f.write('lines.dat')
+			f.write('version')
+			f.close()
+
+			try:		
+				os.remove('words.dat')
+				os.remove('lines.dat')
+				os.remove('version')
+			except (OSError, IOError), e:
+				print "could not remove the files"
 
 		# Save settings
 		self.settings.save()
@@ -260,6 +264,8 @@ class pyborg:
 		If owner==1 allow owner commands.
 		"""
 
+		if self.settings.process_with == "megahal": import mh_python
+
 		# add trailing space so sentences are broken up correctly
 		body = body + " "
 
@@ -269,15 +275,23 @@ class pyborg:
 			return
 
 		# Filter out garbage and do some formatting
-		body = filter_message(body, self.settings.aliases)
+		body = filter_message(body, self)
 	
 		# Learn from input
 		if learn == 1:
-			self.learn(body)
+			if self.settings.process_with == "pyborg":
+				self.learn(body)
+			elif self.settings.process_with == "megahal" and self.settings.learning == 1:
+				mh_python.learn(body)
 
 		# Make a reply if desired
 		if randint(0, 99) < replyrate:
-			message = self.reply(body)
+
+			if self.settings.process_with == "pyborg":
+				message = self.reply(body)
+			elif self.settings.process_with == "megahal":
+				message = mh_python.doreply(body)
+
 			# single word reply: always output
 			if len(message.split()) == 1:
 				io_module.output(message, args)
@@ -285,9 +299,6 @@ class pyborg:
 			# empty. do not output
 			if message == "":
 				return
-			# same as input. do not output
-#			if message == body.strip().lower():
-#				return
 			# else output
 			if owner==0:
 				time.sleep(.2*len(message))
@@ -309,7 +320,7 @@ class pyborg:
 			msg = self.ver_string
 
 		# How many words do we know?
-		elif command_list[0] == "!words":
+		elif command_list[0] == "!words" and self.settings.process_with == "pyborg":
 			num_w = self.settings.num_words
 			num_c = self.settings.num_contexts
 			num_l = len(self.lines)
@@ -320,7 +331,7 @@ class pyborg:
 			msg = "I know %d words (%d contexts, %.2f per word), %d lines." % (num_w, num_c, num_cpw, num_l)
 				
 		# Do i know this word
-		elif command_list[0] == "!known":
+		elif command_list[0] == "!known" and self.settings.process_with == "pyborg":
 			if len(command_list) == 2:
 				# single word specified
 				word = command_list[1].lower()
@@ -371,7 +382,7 @@ class pyborg:
 						io_module.output(i, args)
 
 			# Change the max_words setting
-			elif command_list[0] == "!limit":
+			elif command_list[0] == "!limit" and self.settings.process_with == "pyborg":
 				msg = "The max limit is "
 				if len(command_list) == 1:
 					msg += str(self.settings.max_words)
@@ -382,7 +393,7 @@ class pyborg:
 
 			
 			# Check for broken links in the dictionary
-			elif command_list[0] == "!checkdict":
+			elif command_list[0] == "!checkdict" and self.settings.process_with == "pyborg":
 				t = time.time()
 				num_broken = 0
 				num_bad = 0
@@ -408,7 +419,6 @@ class pyborg:
 					if len(wlist) == 0:
 						del self.words[w]
 						self.settings.num_words = self.settings.num_words - 1
-						#print "\""+w+"\" vaped totally"
 						print "\"%s\" vaped totally" % w
 
 				msg = "Checked dictionary in %0.2fs. Fixed links: %d broken, %d bad." % \
@@ -416,7 +426,7 @@ class pyborg:
 
 			# Rebuild the dictionary by discarding the word links and
 			# re-parsing each line
-			elif command_list[0] == "!rebuilddict":
+			elif command_list[0] == "!rebuilddict" and self.settings.process_with == "pyborg":
 				if self.settings.learning == 1:
 					t = time.time()
 
@@ -431,7 +441,6 @@ class pyborg:
 
 					for k in old_lines.keys():
 						self.learn(old_lines[k][0], old_lines[k][1])
-						#self.lines[k][1] = old_lines[k][1]
 
 					msg = "Rebuilt dictionary in %0.2fs. Words %d (%+d), contexts %d (%+d)" % \
 							(time.time()-t,
@@ -441,7 +450,7 @@ class pyborg:
 							self.settings.num_contexts - old_num_contexts)
 
 			#Remove rares words
-			elif command_list[0] == "!purge":
+			elif command_list[0] == "!purge" and self.settings.process_with == "pyborg":
 				t = time.time()
 
 				liste = []
@@ -488,7 +497,7 @@ class pyborg:
 						compteur)
 				
 			# Change a typo in the dictionary
-			elif command_list[0] == "!replace":
+			elif command_list[0] == "!replace" and self.settings.process_with == "pyborg":
 				if len(command_list) < 3:
 					return
 				old = command_list[1].lower()
@@ -540,7 +549,7 @@ class pyborg:
 					x += 1
 
 			# Remove a word from the vocabulary [use with care]
-			elif command_list[0] == "!unlearn":
+			elif command_list[0] == "!unlearn" and self.settings.process_with == "pyborg":
 				# build context we are looking for
 				context = " ".join(command_list[1:])
 				context = context.lower()
@@ -572,14 +581,12 @@ class pyborg:
 						self.settings.learning = 0
 
 			# add a word to the 'censored' list
-			elif command_list[0] == "!censor":
+			elif command_list[0] == "!censor" and self.settings.process_with == "pyborg":
 				# no arguments. list censored words
 				if len(command_list) == 1:
 					if len(self.settings.censored) == 0:
 						msg = "No words censored"
 					else:
-						#msg = "I will not use the word(s) "
-						#msg += ", ".join(self.settings.censored)
 						msg = "I will not use the word(s) %s" % ", ".join(self.settings.censored)
 				# add every word listed to censored list
 				else:
@@ -593,7 +600,7 @@ class pyborg:
 						msg = msg + "\n"
 
 			# remove a word from the censored list
-			elif command_list[0] == "!uncensor":
+			elif command_list[0] == "!uncensor" and self.settings.process_with == "pyborg":
 				# Remove everyone listed from the ignore list
 				# eg !unignore tom dick harry
 				for x in range(1, len(command_list)):
@@ -616,12 +623,9 @@ class pyborg:
 					if command_list[1][0] != '~':
 						command_list[1] = '~' + command_list[1]
 					if command_list[1] in self.settings.aliases.keys():
-						#msg = "Thoses words :" + "".join(self.settings.aliases[command_list[1]]) +\
-						" are aliases to " + command_list[1]
 						msg = "Thoses words : %s  are aliases to %s" \
 						% ( "".join(self.settings.aliases[command_list[1]]), command_list[1] )
 					else:
-						#msg = "The alias " + command_list[1][1:] + " is not known"
 						msg = "The alias %s is not known" % command_list[1][1:]
 				elif len(command_list) > 2:
 					#create the aliases
