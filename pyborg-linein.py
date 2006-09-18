@@ -2,7 +2,7 @@
 #
 # PyBorg Offline line input module
 #
-# Copyright (c) 2000, 2001 Tom Morton
+# Copyright (c) 2000, 2006 Tom Morton, Sebastien Dailly
 #
 #
 # This program is free software; you can redistribute it and/or
@@ -40,6 +40,8 @@ class ModLineIn:
 	def start(self):
 		print "PyBorg offline chat!\n"
 		print "Type !quit to leave"
+		print "What is your name"
+		name = raw_input("? ")
 		while 1:
 			try:
 				body = raw_input("> ")
@@ -52,7 +54,7 @@ class ModLineIn:
 				if self.linein_commands(body):
 					continue
 			# Pass message to borg
-			self.pyborg.process_msg(self, body, 100, 1, ( None ), owner = 1)
+			self.pyborg.process_msg(self, body, 100, 1, ( name ), owner = 1)
 
 	def linein_commands(self, body):
 		command_list = string.split(body)
@@ -65,6 +67,7 @@ class ModLineIn:
 		"""
 		Output a line of text.
 		"""
+		message = message.replace("#nick", args)
 		print message
 
 if __name__ == "__main__":
