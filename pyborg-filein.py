@@ -2,7 +2,7 @@
 #
 # PyBorg ascii file input module
 #
-# Copyright (c) 2000, 2001 Tom Morton
+# Copyright (c) 2000, 2006 Tom Morton, Sébastien Dailly
 #
 #
 # This program is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ class ModFileIn:
 		f.close()
 
 		print "I knew "+`Borg.settings.num_words`+" words ("+`len(Borg.lines)`+" lines) before reading "+sys.argv[1]
-		buffer = pyborg.filter_message(buffer)
+		buffer = pyborg.filter_message(buffer, Borg)
 		# Learn from input
 		try:
 			Borg.learn(buffer)
