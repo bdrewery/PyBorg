@@ -169,7 +169,7 @@ class pyborg:
 				num_contexts = 0
 				# Get number of contexts
 				for x in self.lines.keys():
-					num_contexts += len(self.lines[x][0]).split()
+					num_contexts += len(self.lines[x][0].split())
 				self.settings.num_contexts = num_contexts
 				# Save new values
 				self.settings.save()
