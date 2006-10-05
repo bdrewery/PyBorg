@@ -185,7 +185,6 @@ class ModIRC(SingleServerIRCBot):
 			reason = ""
 
 		if kicked == self.settings.myname:
-			#print "["+get_time()+"] <--  "+kicked+" was kicked off "+`target`+" by "+kicker+" ("+reason+")"
 			print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
 
 	def on_privmsg(self, c, e):
@@ -244,6 +243,11 @@ class ModIRC(SingleServerIRCBot):
 					break
 			body = body[x:]
 
+		#remove special irc fonts chars
+		body = body[body.rfind("\x02")+1:]
+		body = body[body.rfind("\xa0")+1:]
+
+
 		# WHOOHOOO!!
 		if target == self.settings.myname or source == self.settings.myname:
 			print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
@@ -298,7 +302,7 @@ class ModIRC(SingleServerIRCBot):
 		if source in self.owners and e.source() in self.owner_mask:
 			self.pyborg.process_msg(self, body, replyrate, learn, (body, source, target, c, e), owner=1)
 		else:
-#			self.pyborg.process_msg(self, body, replyrate, learn, (body, source, target, c, e))
+			#start a new thread
 			thread.start_new_thread(self.pyborg.process_msg, (self, body, replyrate, learn, (body, source, target, c, e)))
 
 	def irc_commands(self, body, source, target, c, e):
@@ -320,7 +324,7 @@ class ModIRC(SingleServerIRCBot):
 				self.owners.append(source)
 				self.output("You've been added to owners list", ("", source, target, c, e))
 			else:
-				self.output("try again", ("", source, target, c, e))
+				self.output("Try again", ("", source, target, c, e))
 
 		### Owner commands
 		if source in self.owners and e.source() in self.owner_mask:
@@ -389,7 +393,7 @@ class ModIRC(SingleServerIRCBot):
 			elif command_list[0] == "!join":
 				for x in range(1, len(command_list)):
 					if not command_list[x] in self.chans:
-						msg = "Attempting to join channel "+command_list[x]
+						msg = "Attempting to join channel %s" % command_list[x]
 						self.chans.append(command_list[x])
 						c.join(command_list[x])
 
@@ -397,7 +401,7 @@ class ModIRC(SingleServerIRCBot):
 			elif command_list[0] == "!part":
 				for x in range(1, len(command_list)):
 					if command_list[x] in self.chans:
-						msg = "Leaving channel "+command_list[x]
+						msg = "Leaving channel %s" % command_list[x]
 						self.chans.remove(command_list[x])
 						c.part(command_list[x])
 
@@ -451,9 +455,11 @@ class ModIRC(SingleServerIRCBot):
 			elif command_list[0] == "!replyrate":
 				try:
 					self.settings.reply_chance = int(command_list[1])
-					msg = "Now replying to "+`int(command_list[1])`+"% of messages."
+					#msg = "Now replying to "+`int(command_list[1])`+"% of messages."
+					msg = "Now replying to %d % of messages." % int(command_list[1])
 				except:
-					msg = "Reply rate is "+`self.settings.reply_chance`+"%."
+					#msg = "Reply rate is "+`self.settings.reply_chance`+"%."
+					msg = "Reply rate is %d%." % self.settings.reply_chance
 			#make the bot talk
 			elif command_list[0] == "!talk":
 				if len(command_list) >= 2:

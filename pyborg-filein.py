@@ -2,7 +2,7 @@
 #
 # PyBorg ascii file input module
 #
-# Copyright (c) 2000, 2006 Tom Morton, Sébastien Dailly
+# Copyright (c) 2000, 2006 Tom Morton, Sebastien Dailly
 #
 #
 # This program is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ class ModFileIn:
 		buffer = pyborg.filter_message(buffer, Borg)
 		# Learn from input
 		try:
+			print buffer
 			Borg.learn(buffer)
 		except KeyboardInterrupt, e:
 			# Close database cleanly

@@ -68,7 +68,7 @@ def save_config(filename, fields):
 		if len(s) > 80:
 			cut_string = ""
 			while len(s) > 80:
-				position = s.find(",",75)+1
+				position = s.rfind(",",0,80)+1
 				cut_string = cut_string + s[:position] + "\\\n\t\t"
 				s = s[position:]
 			s = cut_string + s
