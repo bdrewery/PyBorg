@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # PyBorg: The python AI bot.
 #
@@ -107,7 +108,7 @@ class pyborg:
 		"words": "Usage: !words\nDisplay how many words are known",
 		"known": "Usage: !known word1 [word2 [...]]\nDisplays if one or more words are known, and how many contexts are known",
 		"contexts": "Owner command. Usage: !contexts <phrase>\nPrint contexts containing <phrase>",
-		"unlearn": "Owner command. Usage: !unlearn <phrase>\nRemove all occurances of a word or phrase from the dictionary. For example '!unlearn of of' would remove all contexts containing double 'of's",
+		"unlearn": "Owner command. Usage: !unlearn <expression>\nRemove all occurances of a word or expression from the dictionary. For example '!unlearn of of' would remove all contexts containing double 'of's",
 		"purge": "Owner command. Usage: !purge [number]\nRemove all occurances of the words that appears in less than <number> contexts",
 		"replace": "Owner command. Usage: !replace <old> <new>\nReplace all occurances of word <old> in the dictionary with <new>",
 		"learning": "Owner command. Usage: !learning [on|off]\nToggle bot learning. Without arguments shows the current setting",
@@ -497,7 +498,7 @@ class pyborg:
 				compteur = 0
 
 				if len(command_list) == 2:
-				# limite d'occurences à effacer
+				# limite d occurences a effacer
 					c_max = command_list[1].lower()
 				else:
 					c_max = 0
@@ -515,7 +516,7 @@ class pyborg:
 							digit += 1
 
 				
-				#Compte les mots inférieurs a cette limite
+				#Compte les mots inferieurs a cette limite
 					c = len(self.words[w])
 					if c < 2 or ( digit and char ):
 						liste.append(w)
@@ -972,7 +973,7 @@ class pyborg:
 			if len(words) < 1:
 				return
 
-			voyelles = "aeiouyéàè"
+			voyelles = "aeiouyÃ©Ã Ã¨"
 			for x in range(0, len(words)):
 
 				nb_voy = 0

@@ -235,18 +235,18 @@ class ModIRC(SingleServerIRCBot):
 				# Ignore all the other CTCPs
 				return
 
-		debut = body.rfind(",")
-		if 1 < debut < 5:
-			x = 0
-			for x in range(debut+1, len(body)):
-				if body[x].isdigit() == 0:
-					break
-			body = body[x:]
+		for irc_color_char in [',', "\x03"]:
+			debut = body.rfind(irc_color_char)
+			if 0 <= debut < 5:
+				x = 0
+				for x in range(debut+1, len(body)):
+					if body[x].isdigit() == 0:
+						break
+				body = body[x:]
 
 		#remove special irc fonts chars
 		body = body[body.rfind("\x02")+1:]
 		body = body[body.rfind("\xa0")+1:]
-
 
 		# WHOOHOOO!!
 		if target == self.settings.myname or source == self.settings.myname:
@@ -274,8 +274,9 @@ class ModIRC(SingleServerIRCBot):
 		if (not source in self.owners) and self.settings.stealth:
 			while body[:1] == "!":
 				body = body[1:]
-			if body == "":
-				return
+
+		if body == "":
+			return
 
 		# Parse ModIRC commands
 		if body[0] == "!":
@@ -456,10 +457,10 @@ class ModIRC(SingleServerIRCBot):
 				try:
 					self.settings.reply_chance = int(command_list[1])
 					#msg = "Now replying to "+`int(command_list[1])`+"% of messages."
-					msg = "Now replying to %d % of messages." % int(command_list[1])
+					msg = "Now replying to %d%% of messages." % int(command_list[1])
 				except:
 					#msg = "Reply rate is "+`self.settings.reply_chance`+"%."
-					msg = "Reply rate is %d%." % self.settings.reply_chance
+					msg = "Reply rate is %d%%." % self.settings.reply_chance
 			#make the bot talk
 			elif command_list[0] == "!talk":
 				if len(command_list) >= 2:
@@ -489,10 +490,7 @@ class ModIRC(SingleServerIRCBot):
 		body, source, target, c, e = args
 
 		# replace by the good nickname
-		if e.eventtype() == "privmsg":
-			message = message.replace("#nick", source)
-		else:
-			message = message.replace("#nick", "")
+		message = message.replace("#nick", source)
 
 		# Decide. should we do a ctcp action?
 		if message.find(self.settings.myname.lower()+" ") == 0:
