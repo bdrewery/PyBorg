@@ -4,7 +4,13 @@ PyBorg ChangeLog
 v1.1.1 - 19/9/2006
 ~~~~~~~~~~~~~~~~~~
 
-* Added a tribune interface
+* Added a tribune interface ( in the experimental directory )
+
+* Added a regular expression system for aliases and censored list( exemple '~bisous': ['bi(s|z+)(ou|e?)(s*|x?)'] )
+
+* Faster load
+
+* Added a no_save option
 
 ~~~~~~~~~~~~~~~~
 

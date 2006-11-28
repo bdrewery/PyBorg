@@ -80,7 +80,7 @@ def filter_message(message, bot):
 
 	words = message.split()
 	if bot.settings.process_with == "pyborg":
-		for x in range(0, len(words)):
+		for x in xrange(0, len(words)):
 			#is there aliases ?
 			for z in bot.settings.aliases.keys():
 				for alias in bot.settings.aliases[z]:
@@ -136,7 +136,8 @@ class pyborg:
 			  "censored":	("Don't learn the sentence if one of those words is found", []),
 			  "num_aliases":("Total of aliases known", 0),
 			  "aliases":	("A list of similars words", {}),
-			  "process_with":("Wich way for generate the reply ( pyborg|megahal)", "pyborg")
+			  "process_with":("Wich way for generate the reply ( pyborg|megahal)", "pyborg"),
+			  "no_save"	:("If True, Pyborg don't saves the dictionary and configuration on disk", "False")
 			} )
 
 		# Read the dictionary
@@ -228,12 +229,12 @@ class pyborg:
 				# No words to unlearn
 				pass
 
-		self.save_all()
+		self.settings.save()
 
 
 
 	def save_all(self):
-		if self.settings.process_with == "pyborg":
+		if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
 			print "Writing dictionary..."
 
 			try:
@@ -631,7 +632,7 @@ class pyborg:
 						msg = "I will not use the word(s) %s" % ", ".join(self.settings.censored)
 				# add every word listed to censored list
 				else:
-					for x in range(1, len(command_list)):
+					for x in xrange(1, len(command_list)):
 						if command_list[x] in self.settings.censored:
 							msg +=  "%s is already censored" % command_list[x]
 						else:
@@ -644,7 +645,7 @@ class pyborg:
 			elif command_list[0] == "!uncensor" and self.settings.process_with == "pyborg":
 				# Remove everyone listed from the ignore list
 				# eg !unignore tom dick harry
-				for x in range(1, len(command_list)):
+				for x in xrange(1, len(command_list)):
 					try:
 						self.settings.censored.remove(command_list[x].lower())
 						msg = "done"
@@ -675,7 +676,7 @@ class pyborg:
 						self.settings.aliases[command_list[1]] = [command_list[1][1:]]
 						self.replace(command_list[1][1:], command_list[1])
 						msg += command_list[1][1:] + " "
-					for x in range(2, len(command_list)):
+					for x in xrange(2, len(command_list)):
 						msg += "%s " % command_list[x]
 						self.settings.aliases[command_list[1]].append(command_list[x])
 						#replace each words by his alias
@@ -774,7 +775,7 @@ class pyborg:
 		"""
 		Reply to a line of text.
 		"""
-		# split sentences into licommand_list[0] = command_list[0].lower()st of words
+		# split sentences into list of words
 		_words = body.split(". ")
 		words = []
 		for i in _words:
@@ -793,7 +794,7 @@ class pyborg:
 		known = -1
 		#The word has to bee seen in already 3 contexts differents for being choosen
 		known_min = 3
-		for x in range(0, len(words)):
+		for x in xrange(0, len(words)):
 			if self.words.has_key(words[x]):
 				k = len(self.words[words[x]])
 			else:
@@ -818,7 +819,7 @@ class pyborg:
 			pre_words = {"" : 0}
 			#this is for prevent the case when we have an ignore_listed word
 			word = str(sentence[0].split(" ")[0])
-			for x in range(0, len(self.words[word]) -1 ):
+			for x in xrange(0, len(self.words[word]) -1 ):
 				l, w = struct.unpack("iH", self.words[word][x])
 				context = self.lines[l][0]
 				num_context = self.lines[l][1]
@@ -852,12 +853,12 @@ class pyborg:
 			liste.sort(lambda x,y: cmp(y[1],x[1]))
 			
 			numbers = [liste[0][1]]
-			for x in range(1, len(liste) ):
+			for x in xrange(1, len(liste) ):
 				numbers.append(liste[x][1] + numbers[x-1])
 
 			#take one them from the list ( randomly )
 			mot = randint(0, numbers[len(numbers) -1])
-			for x in range(0, len(numbers)):
+			for x in xrange(0, len(numbers)):
 				if mot <= numbers[x]:
 					mot = liste[x][0]
 					break
@@ -894,7 +895,7 @@ class pyborg:
 			#create a dictionary wich will contain all the words we can found before the "chosen" word
 			post_words = {"" : 0}
 			word = str(sentence[-1].split(" ")[-1])
-			for x in range(0, len(self.words[word]) ):
+			for x in xrange(0, len(self.words[word]) ):
 				l, w = struct.unpack("iH", self.words[word][x])
 				context = self.lines[l][0]
 				num_context = self.lines[l][1]
@@ -903,9 +904,6 @@ class pyborg:
 				if len(sentence) > 1:
 					if sentence[len(sentence)-2] != cwords[w-1]:
 						continue
-					else:
-						#print context
-						pass
 
 				if w < len(cwords)-1:
 					#if the word is in ignore_list, look the previous word
@@ -924,12 +922,12 @@ class pyborg:
 			liste.sort(lambda x,y: cmp(y[1],x[1]))
 			numbers = [liste[0][1]]
 			
-			for x in range(1, len(liste) ):
+			for x in xrange(1, len(liste) ):
 				numbers.append(liste[x][1] + numbers[x-1])
 
 			#take one them from the list ( randomly )
 			mot = randint(0, numbers[len(numbers) -1])
-			for x in range(0, len(numbers)):
+			for x in xrange(0, len(numbers)):
 				if mot <= numbers[x]:
 					mot = liste[x][0]
 					break
@@ -952,7 +950,7 @@ class pyborg:
 
 		sentence = pre_words[:-2] + sentence
 
-		for x in range(0, len(sentence)):
+		for x in xrange(0, len(sentence)):
 			if sentence[x][0] == "~":sentence[x] = sentence[x][1:]
 		# Sentence is finished. build into a string
 		return " ".join(sentence)
@@ -967,14 +965,15 @@ class pyborg:
 			"""
 			Learn from a sentence.
 			"""
+			import re
 
 			words = body.split()
 			# Ignore sentences of < 1 words XXX was <3
 			if len(words) < 1:
 				return
 
-			voyelles = "aeiouyÃ©Ã Ã¨"
-			for x in range(0, len(words)):
+			voyelles = "aàâeéèêiîïoöôuüûy"
+			for x in xrange(0, len(words)):
 
 				nb_voy = 0
 				digit = 0
@@ -986,10 +985,15 @@ class pyborg:
 						char += 1
 					if c.isdigit():
 						digit += 1
-					
+
+				for censored in self.settings.censored:
+					pattern = "^%s$" % censored
+					if re.search(pattern, words[x]):
+						print "Censored word %s" %words[x]
+						return
+
 				if len(words[x]) > 13 \
 				or ( ((nb_voy*100) / len(words[x]) < 26) and len(words[x]) > 5 ) \
-				or ( words[x] in self.settings.censored ) \
 				or ( char and digit ) \
 				or ( self.words.has_key(words[x]) == 0 and self.settings.learning == 0 ):
 					#if one word as more than 13 characters, don't learn
@@ -1020,7 +1024,7 @@ class pyborg:
 					
 					self.lines[hashval] = [cleanbody, num_context]
 					# Add link for each word
-					for x in range(0, len(words)):
+					for x in xrange(0, len(words)):
 						if self.words.has_key(words[x]):
 							# Add entry. (line number, word number)
 							self.words[words[x]].append(struct.pack("iH", hashval, x))

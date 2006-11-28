@@ -118,12 +118,12 @@ class ModIRC(SingleServerIRCBot):
 
 		# Parse command prompt parameters
 		
-		for x in range(1, len(args)):
+		for x in xrange(1, len(args)):
 			# Specify servers
 			if args[x] == "-s":
 				self.settings.servers = []
 				# Read list of servers
-				for y in range(x+1, len(args)):
+				for y in xrange(x+1, len(args)):
 					if args[y][0] == "-":
 						break
 					server = args[y].split(":")
@@ -135,7 +135,7 @@ class ModIRC(SingleServerIRCBot):
 			if args[x] == "-c":
 				self.settings.chans = []
 				# Read list of channels
-				for y in range(x+1, len(args)):
+				for y in xrange(x+1, len(args)):
 					if args[y][0] == "-":
 						break
 					self.settings.chans.append("#"+args[y])
@@ -239,7 +239,7 @@ class ModIRC(SingleServerIRCBot):
 			debut = body.rfind(irc_color_char)
 			if 0 <= debut < 5:
 				x = 0
-				for x in range(debut+1, len(body)):
+				for x in xrange(debut+1, len(body)):
 					if body[x].isdigit() == 0:
 						break
 				body = body[x:]
@@ -260,6 +260,7 @@ class ModIRC(SingleServerIRCBot):
 		if e.eventtype() == "pubmsg":
 			for x in self.channels[target].users():
 				body = body.replace(x, "#nick")
+		print body
 
 		# Ignore selected nicks
 		if self.settings.ignorelist.count(source.lower()) > 0 \
@@ -278,11 +279,6 @@ class ModIRC(SingleServerIRCBot):
 		if body == "":
 			return
 
-		# Parse ModIRC commands
-		if body[0] == "!":
-			if self.irc_commands(body, source, target, c, e) == 1:
-				return
-
 		# Ignore quoted messages
 		if body[0] == "<" or body[0:1] == "\"" or body[0:1] == " <":
 			print "Ignoring quoted text"
@@ -298,6 +294,11 @@ class ModIRC(SingleServerIRCBot):
 		# Always reply to private messages
 		if e.eventtype() == "privmsg":
 			replyrate = 100
+
+			# Parse ModIRC commands
+			if body[0] == "!":
+				if self.irc_commands(body, source, target, c, e) == 1:return
+
 
 		# Pass message onto pyborg
 		if source in self.owners and e.source() in self.owner_mask:
@@ -381,7 +382,7 @@ class ModIRC(SingleServerIRCBot):
 					msg = "I'll be quiet :-("
 					self.settings.speaking = 0
 				else:
-					msg = ":-o"
+					msg = ":-x"
 			# Wake up again
 			elif command_list[0] == "!wakeup":
 				if self.settings.speaking == 0:
@@ -392,7 +393,7 @@ class ModIRC(SingleServerIRCBot):
 						
 			# Join a channel or list of channels
 			elif command_list[0] == "!join":
-				for x in range(1, len(command_list)):
+				for x in xrange(1, len(command_list)):
 					if not command_list[x] in self.chans:
 						msg = "Attempting to join channel %s" % command_list[x]
 						self.chans.append(command_list[x])
@@ -400,7 +401,7 @@ class ModIRC(SingleServerIRCBot):
 
 			# Part a channel or list of channels
 			elif command_list[0] == "!part":
-				for x in range(1, len(command_list)):
+				for x in xrange(1, len(command_list)):
 					if command_list[x] in self.chans:
 						msg = "Leaving channel %s" % command_list[x]
 						self.chans.remove(command_list[x])
@@ -413,7 +414,7 @@ class ModIRC(SingleServerIRCBot):
 				else:
 					msg = "I'm currently on "
 					channels = self.channels.keys()
-					for x in range(0, len(channels)):
+					for x in xrange(0, len(channels)):
 						msg = msg+channels[x]+" "
 			# add someone to the ignore list
 			elif command_list[0] == "!ignore":
@@ -424,19 +425,19 @@ class ModIRC(SingleServerIRCBot):
 					if len(self.settings.ignorelist) == 0:
 						msg = msg + "nobody"
 					else:
-						for x in range(0, len(self.settings.ignorelist)):
+						for x in xrange(0, len(self.settings.ignorelist)):
 							msg = msg + self.settings.ignorelist[x] + " "
 				# Add everyone listed to the ignore list
 				# eg !ignore tom dick harry
 				else:
-					for x in range(1, len(command_list)):
+					for x in xrange(1, len(command_list)):
 						self.settings.ignorelist.append(command_list[x].lower())
 						msg = "done"
 			# remove someone from the ignore list
 			elif command_list[0] == "!unignore":
 				# Remove everyone listed from the ignore list
 				# eg !unignore tom dick harry
-				for x in range(1, len(command_list)):
+				for x in xrange(1, len(command_list)):
 					try:
 						self.settings.ignorelist.remove(command_list[x].lower())
 						msg = "done"
@@ -456,16 +457,14 @@ class ModIRC(SingleServerIRCBot):
 			elif command_list[0] == "!replyrate":
 				try:
 					self.settings.reply_chance = int(command_list[1])
-					#msg = "Now replying to "+`int(command_list[1])`+"% of messages."
 					msg = "Now replying to %d%% of messages." % int(command_list[1])
 				except:
-					#msg = "Reply rate is "+`self.settings.reply_chance`+"%."
 					msg = "Reply rate is %d%%." % self.settings.reply_chance
 			#make the bot talk
 			elif command_list[0] == "!talk":
 				if len(command_list) >= 2:
 					phrase=""
-					for x in range (2, len (command_list)):
+					for x in xrange (2, len (command_list)):
 						phrase = phrase + str(command_list[x]) + " "
 					self.output(phrase, ("", command_list[1], "", c, e))
 			# Save changes
