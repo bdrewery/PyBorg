@@ -289,8 +289,9 @@ class pyborg:
 			map( (lambda x: f.write(str(x[0])+"\n") ), wordlist)
 
 			f.close()
-		# Save settings
-		self.settings.save()
+
+			# Save settings
+			self.settings.save()
 
 	def process_msg(self, io_module, body, replyrate, learn, args, owner=0):
 		"""

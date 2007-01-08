@@ -103,17 +103,16 @@ class cfgset:
 		"""
 		Save borg settings
 		"""
-		if self.no_save != "True":
-			keys = {}
-			for i in self.__dict__.keys():
-				# reserved
-				if i == "_defaults" or i == "_filename":
-					continue
-				if self._defaults.has_key(i):
-					comment = self._defaults[i][0]
-				else:
-					comment = ""
-				keys[i] = (comment, self.__dict__[i])
-			# save to config file
-			_save_config(self._filename, keys)
+		keys = {}
+		for i in self.__dict__.keys():
+			# reserved
+			if i == "_defaults" or i == "_filename":
+				continue
+			if self._defaults.has_key(i):
+				comment = self._defaults[i][0]
+			else:
+				comment = ""
+			keys[i] = (comment, self.__dict__[i])
+		# save to config file
+		_save_config(self._filename, keys)
 
