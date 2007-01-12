@@ -74,9 +74,12 @@ def filter_message(message, bot):
 	message = message.replace(":", " : ")
 
 	# Find ! and ? and append full stops.
+	message = message.replace(". ", ".. ")
 	message = message.replace("? ", "?. ")
 	message = message.replace("! ", "!. ")
 
+	#And correct the '...'
+	message = message.replace("..  ..  .. ", ".... ")
 
 	words = message.split()
 	if bot.settings.process_with == "pyborg":
@@ -907,7 +910,7 @@ class pyborg:
 						continue
 
 				if w < len(cwords)-1:
-					#if the word is in ignore_list, look the previous word
+					#if the word is in ignore_list, look the next word
 					look_for = cwords[w+1]
 					if look_for in self.settings.ignore_list and w < len(cwords) -2:
 						look_for = look_for+" "+cwords[w+2]
@@ -934,7 +937,6 @@ class pyborg:
 					break
 
 			x = -1
-			sortie = 0
 			while mot in sentence:
 				x += 1
 				if x >= len(liste) -1:
@@ -951,10 +953,24 @@ class pyborg:
 
 		sentence = pre_words[:-2] + sentence
 
+		#Replace aliases
 		for x in xrange(0, len(sentence)):
-			if sentence[x][0] == "~":sentence[x] = sentence[x][1:]
-		# Sentence is finished. build into a string
-		return " ".join(sentence)
+			if sentence[x][0] == "~": sentence[x] = sentence[x][1:]
+
+		#Insert space between each words
+		map( (lambda x: sentence.insert(1+x*2, " ") ), xrange(0, len(sentence)-1) ) 
+
+		#correct the ' & , spaces problem
+		#code is not very good and can be improve but does his job...
+		for x in xrange(0, len(sentence)):
+			if sentence[x] == "'":
+				sentence[x-1] = ""
+				sentence[x+1] = ""
+			if sentence[x] == ",":
+				sentence[x-1] = ""
+
+		#return as string..
+		return "".join(sentence)
 
 	def learn(self, body, num_context=1):
 		"""
@@ -1041,4 +1057,5 @@ class pyborg:
 
 		# Split body text into sentences and parse them
 		# one by one.
+		body += " "
 		map ( (lambda x : learn_line(self, x, num_context)), body.split(". "))
