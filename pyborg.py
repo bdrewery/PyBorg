@@ -99,7 +99,7 @@ class pyborg:
 	import re
 	import cfgfile
 
-	ver_string = "I am a version 1.1.0 PyBorg"
+	ver_string = "I am a version 1.1.1 PyBorg"
 	saves_version = "1.1.0"
 
 	# Main command list
@@ -273,7 +273,7 @@ class pyborg:
 			f.write('version')
 			f.close()
 
-			try:		
+			try:
 				os.remove('words.dat')
 				os.remove('lines.dat')
 				os.remove('version')
@@ -638,7 +638,7 @@ class pyborg:
 				else:
 					for x in xrange(1, len(command_list)):
 						if command_list[x] in self.settings.censored:
-							msg +=  "%s is already censored" % command_list[x]
+							msg += "%s is already censored" % command_list[x]
 						else:
 							self.settings.censored.append(command_list[x].lower())
 							self.unlearn(command_list[x])
@@ -790,7 +790,6 @@ class pyborg:
 			return ""
 		
 		#remove words on the ignore list
-		#words = filter((lambda x: x not in self.settings.ignore_list and not x.isdigit() ), words)
 		words = [x for x in words if x not in self.settings.ignore_list and not x.isdigit()]
 
 		# Find rarest word (excluding those unknown)
@@ -829,8 +828,6 @@ class pyborg:
 				num_context = self.lines[l][1]
 				cwords = context.split()
 				#if the word is not the first of the context, look the previous one
-				if cwords[w] != word:
-					print context
 				if w:
 					#look if we can found a pair with the choosen word, and the previous one
 					if len(sentence) > 1 and len(cwords) > w+1:
@@ -989,7 +986,7 @@ class pyborg:
 			if len(words) < 1:
 				return
 
-			voyelles = "aàâeéèêiîïoöôuüûy"
+			voyelles = "aÃ Ã¢eÃ©Ã¨ÃªiÃ®Ã¯oÃ¶Ã´uÃ¼Ã»y"
 			for x in xrange(0, len(words)):
 
 				nb_voy = 0

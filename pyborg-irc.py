@@ -69,7 +69,7 @@ class ModIRC(SingleServerIRCBot):
 	# Command list for this module
 	commandlist =   "IRC Module Commands:\n!chans, !ignore, \
 !join, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
-!stealth, !unignore, !wakeup, !talk, !owner"
+!stealth, !unignore, !wakeup, !talk, !me, !owner"
 	# Detailed command description dictionary
 	commanddict = {
 		"shutup": "Owner command. Usage: !shutup\nStop the bot talking",
@@ -84,7 +84,8 @@ class ModIRC(SingleServerIRCBot):
 		"reply2ignored": "Owner command. Usage: !reply2ignored [on|off]\nAllow/disallow replying to ignored users. Without arguments shows the current setting",
 		"stealth": "Owner command. Usage: !stealth [on|off]\nTurn stealth mode on or off (disable non-owner commands and don't return CTCP VERSION). Without arguments shows the current setting",
 		"quitmsg": "Owner command. Usage: !quitmsg [message]\nSet the quit message. Without arguments show the current quit message",
-		"talk": "Owner commande. Usage !talk nick message\nmake the bot send the sentence 'message' to 'nick'",
+		"talk": "Owner command. Usage !talk nick message\nmake the bot send the sentence 'message' to 'nick'",
+		"me": "Owner command. Usage !me nick message\nmake the bot send the sentence 'message' to 'nick'",
 		"quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
 		"owner": "Usage: !owner password\nAllow to become owner of the bot"
 	}
@@ -102,7 +103,7 @@ class ModIRC(SingleServerIRCBot):
 			{ "myname": ("The bot's nickname", "PyBorg"),
 			  "realname": ("Reported 'real name'", "Pyborg"),
 			  "owners": ("Owner(s) nickname", [ "OwnerNick" ]),
-			  "servers": ("IRC Server to connect to", [("irc.starchat.net", 6667)]),
+			  "servers": ("IRC Server to connect to (server, port [,password])", [("irc.starchat.net", 6667)]),
 			  "chans": ("Channels to auto-join", ["#test"]),
 			  "speaking": ("Allow the bot to talk on channels", 1),
 			  "stealth": ("Hide the fact we are a bot", 0),
@@ -467,6 +468,13 @@ class ModIRC(SingleServerIRCBot):
 					for x in xrange (2, len (command_list)):
 						phrase = phrase + str(command_list[x]) + " "
 					self.output(phrase, ("", command_list[1], "", c, e))
+			#make the bot /me
+			elif command_list[0] == "!me":
+				if len(command_list) >= 2:
+					phrase=""
+					for x in range (2, len (command_list)):
+						phrase = phrase + str(command_list[x]) + " "
+					self.output("\x01ACTION " + phrase + "\x01", ("", command_list[1], "", c, e))
 			# Save changes
 			self.pyborg.settings.save()
 			self.settings.save()
