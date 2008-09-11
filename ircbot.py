@@ -16,7 +16,7 @@
 #
 # Joel Rosdahl <joel@rosdahl.net>
 #
-# $Id: ircbot.py,v 1.22 2008/08/29 23:20:56 keltus Exp $
+# $Id: ircbot.py,v 1.23 2008/09/11 07:38:30 keltus Exp $
 
 """ircbot -- Simple IRC bot library.
 
@@ -93,7 +93,7 @@ class SingleServerIRCBot(SimpleIRCClient):
                          self.server_list[0][1],
                          self._nickname,
                          password,
-                         ircname=self._realname, ssl=True)
+                         ircname=self._realname)
         except ServerConnectionError:
             pass
 
