@@ -16,7 +16,7 @@
 #
 # keltus <keltus@users.sourceforge.net>
 #
-# $Id: irclib.py,v 1.46 2008/08/29 23:20:56 keltus Exp $
+# $Id: irclib.py,v 1.47 2008/09/25 22:00:59 keltus Exp $
 
 """irclib -- Internet Relay Chat (IRC) protocol client library.
 
@@ -70,7 +70,7 @@ import sys
 import time
 import types
 
-VERSION = 0, 4, 7
+VERSION = 0, 4, 8
 DEBUG = 0
 
 # TODO
