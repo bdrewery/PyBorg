@@ -418,6 +418,7 @@ class pyborg:
                     msg += word + "/%i " % contexts
                 else:
                     msg += word + "is unknown "
+            msg = msg.replace("#nick", "$nick")
 
         # Owner commands
         if owner == 1:
