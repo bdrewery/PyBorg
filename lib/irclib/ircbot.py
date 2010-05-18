@@ -397,7 +397,7 @@ class Channel:
                 del self.operdict[value]
             elif mode == "v":
                 del self.voiceddict[value]
-            else:
+            elif mode is not None:
                 del self.modes[mode]
         except KeyError:
             pass
