@@ -1,0 +1,144 @@
+#
+# PyBorg: The python AI bot.
+#
+# Copyright (c) 2000, 2006 Tom Morton, Sébastien Dailly
+#
+# This bot was inspired by the PerlBorg, by Eric Bock.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+# Tom Morton <tom@moretom.net>
+#
+
+PyBorg 1.1.0 needs Python 1.5.2 or greater (www.python.org).
+The 'irclib' and 'ircbot' modules in the PyBorg archive were written by Joel
+Rosdahl (www.rosdahl.net). PyBorg has been tested on linux, windows and BSD
+and /may/ work on other Python platforms.
+
+'python pyborg-linein.py' to chat with the bot offline.
+'python pyborg-irc.py' for irc mode.
+
+Use convert2.py to convert pyborg olders dictionaries to pyborg 1.1.0
+format. The dictionary is stored in lines.dat and words.dat and saved in a zip
+file.
+
+Orders :
+--------
+
+All the orders start with one “!”. According to whether the bot is connected to
+IRC or not, the list of the order is not the same one. Here the list of the
+orders which are usable all the time:
+
+    * !help: post the whole of the orders available
+    * !version: post the version of the bot
+    * !quit: leave the program
+    * !save: safeguard the dictionary and the files of configuration
+
+    * !words: post the number of words and sentences known
+    * !known [Word]: post if the word [Word] is known and numbers it sentences
+       in which it appears
+
+    * !unlearn [Word]: erase the word of the dictionary
+    * !purge: Post the number of words which appear only in one context
+    * !purge [a number]: erase [a number] words of the dictionary, among the
+       least frequent words
+    * !replace [word1] [word2]: replace all the events of [word1] by [word2]
+    * !censor [Word]: censure the word [Word]
+    * !uncensor [Word]: withdraw [Word] list of censure
+
+    * !learning [on|off]: authorize or not the training of new words
+    * !limit [a number]: limit the number of words known with [a number]
+       (by defect 6000)
+
+    * !alias: List all alias what exists
+    * !alias [alias]: List all the words which refer to {alias]
+    * !alias [alias] [word1] [wordN]: create alias which replaces all the events
+       of [Word] by [alias]
+
+The following orders are available only on IRC:
+
+    * !nick [nick]: change nick the bot
+    * !shutup: prevent the bot from speaking on the channels
+    * !wakeup: cancel one! shutup
+    * !replyrate [a number]: probability that the bot answers a message diffused
+       on the channel
+    * !talk [nick] [message]: send the message [message] with [nick] on behalf
+       of the bot
+
+    * !join [channel]: connect the bot to [channel]
+    * !leaves [channel]: fact of leaving the channel [channel]
+    * !chans: list the channels where the bot is connected
+
+    * !ignore of [nick]: ignore nick
+    * !uningore [nick]: withdraw nick list of the people to be ignored
+
+    * !owner password: allows to be added to the list of the owners (the
+       password is defined in the file pyborg-irc.cfg)
+
+Configuration files :
+---------------------
+
+Edit pyborg.cfg, and pyborg-irc.cfg (created the first time you run pyborg-irc)
+to configure the bot.
+
+pyborg.cfg:
+
+    * num_aliases: variable of the program, not to change, indicates the number
+      of known alias
+    * num_contexts: variable of the program, not to change, indicates the number
+      of known sentences
+    * ignore_list: indicate the list of words which are not relevant in a
+      sentence (ex: [“one”, “a”, “of”, “some”]
+    * max_words: maximum limit with the number of known words, can be changed
+      thanks to the order !limit
+    * learning: indicate if the bot must learn or not. Can be changed thanks to
+      the order !learning
+    * aliases: the list of alias. Can be changed with the order! alias
+    * censored: the list of the censured words. Can be changed with the order
+      !censor !uncensor
+    * num_words: variable of the program, not to change, indicates the number of
+      known words
+    * no_save: if True, the program will not do any saves on disk.
+
+pyborg-irc.cfg:
+
+    * owners: a list of owners of the bot
+    * reply_chance: percentage of chance that the bot answers a message diffused
+      on the channel. Can be changed with the order! replyrate (see the order!
+      replyrate)
+    * reply_to_ignored: 0 or 1 make it possible to answer or not the people who
+      in the list of are ignored
+    * chans: a list channels one where the bot must be connected (is not
+      modified by the order !join)
+    * servers: a list of waiters where the bot must be connected
+    * ignorelist: a list of people which the bot will not answer (see the order!
+      be unaware of! unignore)
+    * quit_message: message of exit to the disconnection
+    * password: password for the order! owner
+    * !speakin: 0 or 1 indicate if the bot must chatter on the channels, can be
+      changed with the orders! shutup! wakeup
+
+The aliases and censored words are regular expression. This mean that you can
+set an aliases like '~hello': ['hell?o'] and each time pyborg will read 'hello'
+or 'helo', it will replace the world by hello. The '~' as now role for now, but
+says to pyborg that the word is an alias and can be used in the future.
+
+NOTE: Terminate the borg with the !quit command or CTRL-C in the
+console. Do not simply close the console window or the dictionary
+will not be saved.
+
+-- 
+Tom Morton <tom@moretom.net>
+Sébastien Dailly <seb.dailly@gmail.com>
