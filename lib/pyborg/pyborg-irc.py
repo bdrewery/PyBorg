@@ -192,6 +192,9 @@ class ModIRC(SingleServerIRCBot):
 
 	def on_privmsg(self, c, e):
 		self.on_msg(c, e)
+
+	def on_nicknameinuse(self, c, e):
+		c.nick(c.get_nickname()[:8] + `random.randint(0, 9)`)
 	
 	def on_pubmsg(self, c, e):
 		self.on_msg(c, e)
