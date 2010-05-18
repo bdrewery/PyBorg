@@ -1,0 +1,159 @@
+PyBorg ChangeLog
+~~~~~~~~~~~~~~~~
+
+v1.1.1 - 19/9/2006
+~~~~~~~~~~~~~~~~~~
+
+* Added a tribune interface ( in the experimental directory )
+
+* Added a regular expression system for aliases and censored list( exemple '~bisous': ['bi(s|z+)(ou|e?)(s*|x?)'] )
+
+* Faster load
+
+* Added a no_save option
+
+~~~~~~~~~~~~~~~~
+
+v1.1.0 - 15/8/2006
+~~~~~~~~~~~~~~~~~~
+
+* Added a msn interface
+
+* Added a megahal interface
+
+* Rewritted the reply routine. Now PyBorg use a markov chain system.
+
+* Added a !talk command for make the bot talk to somebody on IRC
+
+* Added !purge command. It purge the dictionary for words who are very rare.
+
+* Added new filters for learn only real words ( no nicknames, no stranges
+wors )
+
+* Save now the nicknames as '#nick' word, and replace it by the nickname of
+the target when speaking to somebody
+
+* Rewritted the censor routine. Now I am sure that the words won't be
+learned and won't be spoken
+
+* Added a file 'words.txt', containing all the words known.
+
+* New unlearn system, with a 'unlearn.txt' file, wich contain all the
+words that PyBorg has to unlearn.
+
+* Added a limit in the number of known words. With the !purge command and the
+unlearn.txt file, 6000-8000 words are now enought.
+
+* Bug fixed in the rebuilddict routine
+
+* Added a ignore list, wich contain the words wich have no importances in the
+sence of the sentece.
+
+* Added an alias system : the PyBorg can now associate words written
+diffrently ( i.e 'you' and 'u' )
+
+* Added an !alias command for control the use of the aliases.
+
+* PyBorg continue to learn sentence, even if the learning setting is off
+( but it will not learn any new words )
+
+* Added a time pause for simulate a writting time
+
+* Save now all the .dat files in a zip file
+
+* The *.cfg files are now more easy to read, with multi-lines display
+
+~~~~~~~~~~~~~~~~
+
+v1.0.6 - 29/4/2002
+~~~~~~~~~~~~~~~~~~
+
+* Added !rebuilddict command. I suggest you run this command when using
+1.0.6 for the first time with an old dictionary.
+
+* Added !checkdict command, which fixes broken links in the dictionary.
+
+* Speeded up the !unlearn command. It's a shitload faster now. A fucking
+metric shitload to be accurate.
+
+* Speeded up the learn routines. It's now also a greased up silent night
+necrophile load faster.
+
+v1.0.5 - 11/3/2002
+~~~~~~~~~~~~~~~~~~
+
+* (pyborg-irc) Don't need the borg.chans workaround anymore.
+
+* (pyborg-irc) Fixed crash in stealth mode when non-owner types '!'...
+
+v1.0.4 - 24/1/2002
+~~~~~~~~~~~~~~~~~~
+
+* (pyborg-irc) Catch exceptions and give the user a chance to save that
+morbidly large dictionary formed while hanging around on dalnet #sex...
+
+* Changed !learn and !nolearn to a single !learning [on|off] command.
+
+* The !help command now only lists the commands briefly, and !help <command>
+gives a more in depth explaination of an individual command.
+
+* Output of !help sent to remote user again, since it is smaller now and
+won't get the bot killed for flooding.
+
+* (pyborg-telnet) Fixed to play properly with that strange windows telnet
+client (provided it [windows telnet] is in local echo mode).
+
+* (pyborg-irc) Added a configure option and command 'quitmsg', to set
+the pyborg quit message. We now properly quit from irc sessions.
+
+* (pyborg-irc) Pyborg listens to CTCP ACTIONs again (broken since moving
+to irclib 0.3.x)
+
+v1.0.3 - 10/11/2001
+~~~~~~~~~~~~~~~~~~~
+
+* (pyborg-irc) Stealth mode (!stealth on|off) to disable non owner
+commands and lie about our CTCP version.
+
+* Fixed stupid bug where the bot copied people exactly.
+
+* Changed to official irclib 0.3.2, which has the fixes mentioned
+in changes for 1.0.2.
+
+* Owner command security fix (thanks #q3f people)
+
+v1.0.2 - 18/7/2001
+~~~~~~~~~~~~~~~~~~
+
+* Fixed bug which made dictionaries saved in win32 and in unix
+incompatible.
+
+* Fixed bug in irclib 0.3.1 where removing channel user limits
+crashes the bot.
+
+* Fixed bug in irclib 0.3.1 where joining a channel with a capital
+W in the name crashes the bot.
+
+v1.0.1 - 19/6/2001
+~~~~~~~~~~~~~~~~~~
+
+* (pyborg-irc) Changed to use irclib 0.3.1
+
+v1.0.0 - 22/5/2001
+~~~~~~~~~~~~~~~~~~
+
+Must use convert.py on pyborg 0.9.10 and 0.9.11 dictionaries.
+
+* Faster dictionary load/save and slightly lower memory usage
+
+* (pyborg-irc) On join and kick replies now obey reply rate.
+
+* (pyborg-irc) Optional mIRC colour filtering
+
+* (pyborg-irc) Optional censoring of words.
+
+* (pyborg-irc) Double chance of replying to messages containing own nickname
+
+* (pyborg-telnet) Telnet server module.
+
+* Lots of other stuff i've forgotten
