@@ -103,6 +103,7 @@ class ModIRC(SingleServerIRCBot):
 			{ "myname": ("The bot's nickname", "PyBorg"),
 			  "realname": ("Reported 'real name'", "Pyborg"),
 			  "localaddress": ("Local IP to bind to", ""),
+			  "ipv6": ("Whether to use IPv6", 0),
 			  "owners": ("Owner(s) nickname", [ "OwnerNick" ]),
 			  "servers": ("IRC Server to connect to (server, port [,password])", [("irc.starchat.net", 6667)]),
 			  "chans": ("Channels to auto-join", ["#test"]),
@@ -150,7 +151,7 @@ class ModIRC(SingleServerIRCBot):
 
 	def our_start(self):
 		print "Connecting to server..."
-		SingleServerIRCBot.__init__(self, self.settings.servers, self.settings.myname, self.settings.realname, 2, self.settings.localaddress)
+		SingleServerIRCBot.__init__(self, self.settings.servers, self.settings.myname, self.settings.realname, 2, self.settings.localaddress, self.settings.ipv6)
 
 		self.start()
 
