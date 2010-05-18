@@ -417,7 +417,7 @@ class pyborg:
                     contexts = len( self.words[word] )
                     msg += word + "/%i " % contexts
                 else:
-                    msg += word + "is unknown "
+                    msg += word + "/unknown "
             msg = msg.replace("#nick", "$nick")
 
         # Owner commands
