@@ -118,6 +118,7 @@ class ModIRC(SingleServerIRCBot):
 
 		self.owners = self.settings.owners[:]
 		self.chans = self.settings.chans[:]
+		self.wanted_myname = self.settings.myname
 
 		# Parse command prompt parameters
 		
@@ -194,7 +195,8 @@ class ModIRC(SingleServerIRCBot):
 		self.on_msg(c, e)
 
 	def on_nicknameinuse(self, c, e):
-		c.nick(c.get_nickname()[:8] + `random.randint(0, 9)`)
+		self.settings.myname = c.get_nickname()[:8] + `random.randint(0, 9)`
+		self.connection.nick(self.settings.myname)
 	
 	def on_pubmsg(self, c, e):
 		self.on_msg(c, e)
@@ -484,8 +486,12 @@ class ModIRC(SingleServerIRCBot):
 						phrase = phrase + str(command_list[x]) + " "
 					self.output("\x01ACTION " + phrase + "\x01", ("", command_list[1], "", c, e))
 			# Save changes
+			save_myname = self.settings.myname
+			if self.wanted_myname is not None:
+				self.settings.myname = self.wanted_myname
 			self.pyborg.settings.save()
 			self.settings.save()
+			self.settings.myname = save_myname
 	
 		if msg == "":
 			return 0
