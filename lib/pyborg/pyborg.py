@@ -75,7 +75,8 @@ def filter_message( message, bot ):
     message = message.replace( ".", " . " )
     message = message.replace( ",", " , " )
     message = message.replace( "'", " ' " )
-    message = message.replace( ":", " : " )
+#    message = re.sub( r"\b:", " : ", message )
+    message = message.replace( "#nick:", "#nick :" )
 
     # Find ! and ? and append full stops.
 #    message = message.replace(". ", ".. ")

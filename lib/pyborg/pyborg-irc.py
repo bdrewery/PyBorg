@@ -504,6 +504,7 @@ class ModIRC(SingleServerIRCBot):
 		body, source, target, c, e = args
 
 		# replace by the good nickname
+		message = message.replace("#nick :", "#nick:")
 		message = message.replace("#nick", source)
 
 		# Decide. should we do a ctcp action?
