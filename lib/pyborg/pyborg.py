@@ -70,7 +70,7 @@ def filter_message( message, bot ):
     # No sense in keeping URLS
 	message = re.sub(r"https?://[^ ]* ", "", message)
 
-    message = message.replace( ";", "," )
+    message = message.replace( "; ", ", " )
     message = message.replace( "?", " ? " )
     message = message.replace( "!", " ! " )
     message = message.replace( ".", " . " )
