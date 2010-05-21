@@ -49,6 +49,7 @@ def filter_message( message, bot ):
 
     # remove garbage
     message = message.replace( "\"", "" ) # remove "s
+    message = message.replace( "'", "" ) # remove 's
     message = message.replace( "\n", " " ) # remove newlines
     message = message.replace( "\r", " " ) # remove carriage returns
 
@@ -74,7 +75,7 @@ def filter_message( message, bot ):
     message = message.replace( "!", " ! " )
     message = message.replace( ".", " . " )
     message = message.replace( ",", " , " )
-    message = message.replace( "'", " ' " )
+#    message = message.replace( "'", " ' " )
 #    message = re.sub( r"\b:", " : ", message )
     message = message.replace( "#nick:", "#nick :" )
 
