@@ -247,8 +247,7 @@ class ModIRC(SingleServerIRCBot):
 		if body.find("\033") != -1: return
 
 		#remove special irc fonts chars
-		body = body[body.rfind("\x02")+1:]
-		body = body[body.rfind("\xa0")+1:]
+		body = re.sub("[\x02\xa0]", "", body)
 
 		# WHOOHOOO!!
 		if target == self.settings.myname or source == self.settings.myname:
