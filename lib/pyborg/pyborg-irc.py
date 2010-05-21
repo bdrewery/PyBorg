@@ -242,15 +242,9 @@ class ModIRC(SingleServerIRCBot):
 			else:
 				# Ignore all the other CTCPs
 				return
-
-		for irc_color_char in [',', "\x03"]:
-			debut = body.rfind(irc_color_char)
-			if 0 <= debut < 5:
-				x = 0
-				for x in xrange(debut+1, len(body)):
-					if body[x].isdigit() == 0:
-						break
-				body = body[x:]
+		# Ignore lines with color
+		if body.find("\x03") != -1: return
+		if body.find("\033") != -1: return
 
 		#remove special irc fonts chars
 		body = body[body.rfind("\x02")+1:]
