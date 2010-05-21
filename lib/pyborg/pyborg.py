@@ -71,10 +71,8 @@ def filter_message( message, bot ):
 	message = re.sub(r"https?://[^ ]* ", "", message)
 
     message = message.replace( "; ", ", " )
-    message = message.replace( "?", " ? " )
-    message = message.replace( "!", " ! " )
-    message = message.replace( ".", " . " )
-    message = message.replace( ",", " , " )
+    for split_char in ['?', '!', '.', ',']:
+        message = message.replace( split_char, " %c " % split_char)
 #    message = message.replace( "'", " ' " )
 #    message = re.sub( r"\b:", " : ", message )
     message = message.replace( "#nick:", "#nick :" )
@@ -998,8 +996,9 @@ class pyborg:
             if sentence[x] == "'":
                 sentence[x - 1] = ""
                 sentence[x + 1] = ""
-            if sentence[x] == ",":
-                sentence[x - 1] = ""
+            for split_char in ['?', '!', ',']:
+                if sentence[x] == split_char:
+                    sentence[x - 1] = ""
 
         #return as string..
         return "".join( sentence )
