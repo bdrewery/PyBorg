@@ -192,7 +192,7 @@ class ModIRC(SingleServerIRCBot):
 
 		if kicked == self.settings.myname:
 			print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
-			self.inchans.remove(target)
+			self.inchans.remove(target.lower())
 
 	def on_part(self, c, e):
 		"""
@@ -203,7 +203,7 @@ class ModIRC(SingleServerIRCBot):
 
 		if parter == self.settings.myname:
 			target = e.target() #channel
-			self.inchans.remove(target)
+			self.inchans.remove(target.lower())
 
 	def on_join(self, c, e):
 		"""
@@ -214,7 +214,7 @@ class ModIRC(SingleServerIRCBot):
 
 		if joiner == self.settings.myname:
 			target = e.target() #channel
-			self.inchans.append(target)
+			self.inchans.append(target.lower())
 
 	def on_privmsg(self, c, e):
 		self.on_msg(c, e)
@@ -425,7 +425,7 @@ class ModIRC(SingleServerIRCBot):
 				for x in xrange(1, len(command_list)):
 					if not command_list[x] in self.chans:
 						self.chans.append(command_list[x])
-					if not command_list[x] in self.inchans:
+					if not command_list[x].lower() in self.inchans:
 						msg = "Attempting to join channel %s" % command_list[x]
 						c.join(command_list[x])
 
@@ -434,7 +434,7 @@ class ModIRC(SingleServerIRCBot):
 				for x in xrange(1, len(command_list)):
 					if command_list[x] in self.chans:
 						self.chans.remove(command_list[x])
-					if command_list[x] in self.inchans:
+					if command_list[x].lower() in self.inchans:
 						msg = "Leaving channel %s" % command_list[x]
 						c.part(command_list[x])
 
@@ -523,7 +523,7 @@ class ModIRC(SingleServerIRCBot):
 	def _chan_checker(self):
 		if self.connection.is_connected():
 			for i in self.chans:
-				if not i.split()[0] in self.inchans:
+				if not i.split()[0].lower() in self.inchans:
 					print "Attempting to rejoin %s" % i
 					self.connection.join(i)
 		self.connection.execute_delayed(20, self._chan_checker)
