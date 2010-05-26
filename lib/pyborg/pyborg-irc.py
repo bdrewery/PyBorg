@@ -339,6 +339,7 @@ class ModIRC(SingleServerIRCBot):
 				try:
 					self.connection.nick(command_list[1])
 					self.settings.myname = command_list[1]
+					self.wanted_myname = self.settings.myname
 				except:
 					pass
 			# stealth mode
