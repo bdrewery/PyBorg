@@ -155,6 +155,7 @@ class ModIRC(SingleServerIRCBot):
 		print "Connecting to server..."
 		SingleServerIRCBot.__init__(self, self.settings.servers, self.settings.myname, self.settings.realname, 2, self.settings.localaddress, self.settings.ipv6)
 
+		self.connection.execute_delayed(20, self._chan_checker)
 		self.start()
 
 	def on_welcome(self, c, e):
@@ -518,6 +519,15 @@ class ModIRC(SingleServerIRCBot):
 			self.output(msg, ("<none>", source, target, c, e))
 			return 1
 			
+
+	def _chan_checker(self):
+		if self.connection.is_connected():
+			for i in self.chans:
+				if not i.split()[0] in self.inchans:
+					print "Attempting to rejoin %s" % i
+					self.connection.join(i)
+		self.connection.execute_delayed(20, self._chan_checker)
+
 	def output(self, message, args):
 		"""
 		Output a line of text. args = (body, source, target, c, e)
