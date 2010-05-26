@@ -118,6 +118,7 @@ class ModIRC(SingleServerIRCBot):
 
 		self.owners = self.settings.owners[:]
 		self.chans = self.settings.chans[:]
+		self.inchans = []
 		self.wanted_myname = self.settings.myname
 
 		# Parse command prompt parameters
@@ -190,6 +191,29 @@ class ModIRC(SingleServerIRCBot):
 
 		if kicked == self.settings.myname:
 			print "[%s] <--  %s was kicked off %s by %s (%s)" % (get_time(), kicked, target, kicker, reason)
+			self.inchans.remove(target)
+
+	def on_part(self, c, e):
+		"""
+		Process leaving
+		"""
+		# Parse Nickname!username@host.mask.net to Nickname
+		parter = e.source().split("!")[0]
+
+		if parter == self.settings.myname:
+			target = e.target() #channel
+			self.inchans.remove(target)
+
+	def on_join(self, c, e):
+		"""
+		Process Joining
+		"""
+		# Parse Nickname!username@host.mask.net to Nickname
+		joiner = e.source().split("!")[0]
+
+		if joiner == self.settings.myname:
+			target = e.target() #channel
+			self.inchans.append(target)
 
 	def on_privmsg(self, c, e):
 		self.on_msg(c, e)
@@ -399,16 +423,18 @@ class ModIRC(SingleServerIRCBot):
 			elif command_list[0] == "!join":
 				for x in xrange(1, len(command_list)):
 					if not command_list[x] in self.chans:
-						msg = "Attempting to join channel %s" % command_list[x]
 						self.chans.append(command_list[x])
+					if not command_list[x] in self.inchans:
+						msg = "Attempting to join channel %s" % command_list[x]
 						c.join(command_list[x])
 
 			# Part a channel or list of channels
 			elif command_list[0] == "!part":
 				for x in xrange(1, len(command_list)):
 					if command_list[x] in self.chans:
-						msg = "Leaving channel %s" % command_list[x]
 						self.chans.remove(command_list[x])
+					if command_list[x] in self.inchans:
+						msg = "Leaving channel %s" % command_list[x]
 						c.part(command_list[x])
 
 			# List channels currently on
