@@ -70,7 +70,7 @@ for key in words.keys():
 	# marshallise it:
 	y = []
 	for i in words[key]:
-		y.append(struct.pack("iH", i[0], i[1]))
+		y.append(struct.pack("lH", i[0], i[1]))
 	words[key] = y
 
 print "Saving Dictionary..."

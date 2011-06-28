@@ -1074,9 +1074,9 @@ class pyborg:
                     for x in xrange( 0, len( words ) ):
                         if self.words.has_key( words[x] ):
                             # Add entry. (line number, word number)
-                            self.words[words[x]].append( struct.pack( "iH", hashval, x ) )
+                            self.words[words[x]].append( struct.pack( "lH", hashval, x ) )
                         else:
-                            self.words[words[x]] = [ struct.pack( "iH", hashval, x ) ]
+                            self.words[words[x]] = [ struct.pack( "lH", hashval, x ) ]
                             self.settings.num_words += 1
                         self.settings.num_contexts += 1
             else :
