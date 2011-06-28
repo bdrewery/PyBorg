@@ -1355,7 +1355,10 @@ def _parse_modes(mode_string, unary_modes=""):
         elif ch == " ":
             collecting_arguments = 1
         elif ch in unary_modes:
-            if len(args) >= arg_count + 1:
+            # Account for -l which has no arguments or -k without any *
+            if (ch == "l" and sign == "-") or (ch == "k" and sign == "-" and args[arg_count] != "*"):
+                modes.append([sign, ch, None])
+            elif len(args) >= arg_count + 1:
                 modes.append([sign, ch, args[arg_count]])
                 arg_count = arg_count + 1
             else:
