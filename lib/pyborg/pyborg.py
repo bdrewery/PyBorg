@@ -471,7 +471,7 @@ class pyborg:
                     wlist = self.words[w]
 
                     for i in xrange( len( wlist ) - 1, -1, -1 ):
-                        line_idx, word_num = struct.unpack( "iH", wlist[i] )
+                        line_idx, word_num = struct.unpack( "lH", wlist[i] )
 
                         # Nasty critical error we should fix
                         if not self.lines.has_key( line_idx ):
@@ -739,7 +739,7 @@ class pyborg:
 
         for x in pointers:
             # pointers consist of (line, word) to self.lines
-            l, w = struct.unpack( "iH", x )
+            l, w = struct.unpack( "lH", x )
             line = self.lines[l][0].split()
             number = self.lines[l][1]
             if line[w] != old:
@@ -794,7 +794,7 @@ class pyborg:
             # Check all the word's links (backwards so we can delete)
             for y in xrange( len( word_contexts ) - 1, -1, -1 ):
                 # Check for any of the deleted contexts
-                if unpack( "iH", word_contexts[y] )[0] in dellist:
+                if unpack( "lH", word_contexts[y] )[0] in dellist:
                     del word_contexts[y]
                     self.settings.num_contexts = self.settings.num_contexts - 1
             if len( words[x] ) == 0:
@@ -851,7 +851,7 @@ class pyborg:
             #this is for prevent the case when we have an ignore_listed word
             word = str( sentence[0].split( " " )[0] )
             for x in xrange( 0, len( self.words[word] ) - 1 ):
-                l, w = struct.unpack( "iH", self.words[word][x] )
+                l, w = struct.unpack( "lH", self.words[word][x] )
                 context = self.lines[l][0]
                 num_context = self.lines[l][1]
                 cwords = context.split()
@@ -927,7 +927,7 @@ class pyborg:
             post_words = {"" : 0}
             word = str( sentence[-1].split( " " )[-1] )
             for x in self.words[word]:
-                l, w = struct.unpack( "iH", x )
+                l, w = struct.unpack( "lH", x )
                 context = self.lines[l][0]
                 num_context = self.lines[l][1]
                 cwords = context.split()
