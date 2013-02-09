@@ -1,8 +1,6 @@
 #! /bin/sh
 
-if ! [ -d data ]; then
-  mkdir data
-fi
+mkdir data 2>/dev/null || :
 cd data/
 
 PYTHON=$(which pypy 2>/dev/null)
