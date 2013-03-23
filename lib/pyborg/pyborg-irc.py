@@ -20,7 +20,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
-import sys
+import sys, time
+from threading import Timer
 
 try:
 	from ircbot import *
@@ -113,16 +114,22 @@ class ModIRC(SingleServerIRCBot):
 			  "reply2ignored": ("Reply to ignored people", 0),
 			  "reply_chance": ("Chance of reply (%) per message", 33),
 			  "quitmsg": ("IRC quit message", "Bye :-("),
-			  "password": ("password for control the bot (Edit manually !)", "")
+			  "password": ("password for control the bot (Edit manually !)", ""),
+			  "autosaveperiod": ("Save every X minutes. Leave at 0 for no saving.", 60)
 			} )
+			
+		# If autosaveperiod is set, trigger it.
+		asp = self.settings.autosaveperiod
+		if(asp > 0) :
+			self.autosave_schedule(asp)			
 
+		# Create useful variables.
 		self.owners = self.settings.owners[:]
 		self.chans = self.settings.chans[:]
 		self.inchans = []
 		self.wanted_myname = self.settings.myname
 
 		# Parse command prompt parameters
-		
 		for x in xrange(1, len(args)):
 			# Specify servers
 			if args[x] == "-s":
@@ -576,6 +583,22 @@ class ModIRC(SingleServerIRCBot):
 				if not source in self.owners:
 					map ( ( lambda x: c.action(x, "(From "+source+") "+body) ), self.owners)
 					map ( ( lambda x: c.action(x, "(To   "+source+") "+message) ), self.owners)
+
+	##
+	# This function schedules autosave_execute to happen every asp minutes
+	# @param asp the autosave period, configured on pyborg-irc.cfg, in minutes.
+ 	def autosave_schedule(self, asp) :
+		print asp	
+		timer = Timer(asp * 60, self.autosave_execute, ())
+		timer.setDaemon(True)
+		timer.start()
+
+	##
+	# This function gets called every autosaveperiod minutes, and executes the autosaving.
+	# @param asp autosaveperiod, see above.
+	def autosave_execute(self) :
+		self.pyborg.save_all()
+		self.autosave_schedule(self.settings.autosaveperiod)
 
 if __name__ == "__main__":
 	
