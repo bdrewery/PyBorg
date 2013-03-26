@@ -43,7 +43,6 @@ def filter_message( message, bot ):
     and converting to lower case.
     """
 
-
     # to lowercase
     message = message.lower()
 
@@ -73,17 +72,7 @@ def filter_message( message, bot ):
     message = message.replace( "; ", ", " )
     for split_char in ['?', '!', '.', ',']:
         message = message.replace( split_char, " %c " % split_char)
-#    message = message.replace( "'", " ' " )
-#    message = re.sub( r"\b:", " : ", message )
     message = message.replace( "#nick:", "#nick :" )
-
-    # Find ! and ? and append full stops.
-#    message = message.replace(". ", ".. ")
-#    message = message.replace("? ", "?. ")
-#    message = message.replace("! ", "!. ")
-
-    #And correct the '...'
-#    message = message.replace("..  ..  .. ", ".... ")
 
     words = message.split()
     if bot.settings.process_with == "pyborg":
