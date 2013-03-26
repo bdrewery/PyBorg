@@ -588,7 +588,6 @@ class ModIRC(SingleServerIRCBot):
 	# This function schedules autosave_execute to happen every asp minutes
 	# @param asp the autosave period, configured on pyborg-irc.cfg, in minutes.
  	def autosave_schedule(self, asp) :
-		print asp	
 		timer = Timer(asp * 60, self.autosave_execute, ())
 		timer.setDaemon(True)
 		timer.start()
