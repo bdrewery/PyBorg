@@ -43,7 +43,6 @@ def filter_message( message, bot ):
     and converting to lower case.
     """
 
-
     # to lowercase
     message = message.lower()
 
@@ -73,17 +72,7 @@ def filter_message( message, bot ):
     message = message.replace( "; ", ", " )
     for split_char in ['?', '!', '.', ',']:
         message = message.replace( split_char, " %c " % split_char)
-#    message = message.replace( "'", " ' " )
-#    message = re.sub( r"\b:", " : ", message )
     message = message.replace( "#nick:", "#nick :" )
-
-    # Find ! and ? and append full stops.
-#    message = message.replace(". ", ".. ")
-#    message = message.replace("? ", "?. ")
-#    message = message.replace("! ", "!. ")
-
-    #And correct the '...'
-#    message = message.replace("..  ..  .. ", ".... ")
 
     words = message.split()
     if bot.settings.process_with == "pyborg":
@@ -104,6 +93,8 @@ class pyborg:
 
     ver_string = "I am a version 1.1.2 PyBorg"
     saves_version = "1.1.0"
+
+    saving = False
 
     # Main command list
     commandlist = "Pyborg commands:\n!checkdict, !contexts, !help, !known, !learning, !rebuilddict, \
@@ -246,75 +237,87 @@ class pyborg:
         _file.close()
         return data
 
+    ##
+    # Saves all dictionaries and words and contexts, everything.
+    # @return returns true if successfully saved, or false if it failed.
     def save_all( self ):
-        if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
-            print "Writing dictionary..."
+        if self.saving :
+            print "Cannot save because currently saving." 
+            return False
+        else : 
+            self.saving = True
+            try : 
+                if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
+                    print "Writing dictionary..."
 
-            try:
-                zfile = zipfile.ZipFile( 'archive.zip', 'r' )
-                for filename in zfile.namelist():
-                    data = zfile.read( filename )
-                    file = open( filename, 'w+b' )
-                    file.write( data )
-                    file.close()
-            except ( OSError, IOError ), e:
-                print "no zip found. Is the programm launch for first time ?"
-
-
-            f = open( "words.dat", "wb" )
-            s = marshal.dumps( self.words )
-            f.write( s )
-            f.close()
-            f = open( "lines.dat", "wb" )
-            s = marshal.dumps( self.lines )
-            f.write( s )
-            f.close()
-
-            #save the version
-            f = open( "version", "w" )
-            f.write( self.saves_version )
-            f.close()
+                    try:
+                        zfile = zipfile.ZipFile( 'archive.zip', 'r' )
+                        for filename in zfile.namelist():
+                            data = zfile.read( filename )
+                            file = open( filename, 'w+b' )
+                            file.write( data )
+                            file.close()
+                    except ( OSError, IOError ), e:
+                        print "no zip found. Is the programm launch for first time ?"
 
 
-            #zip the files
-            f = zipfile.ZipFile( 'archive.zip', 'w', zipfile.ZIP_DEFLATED )
-            f.write( 'words.dat' )
-            f.write( 'lines.dat' )
-            f.write( 'version' )
-            f.close()
+                    f = open( "words.dat", "wb" )
+                    s = marshal.dumps( self.words )
+                    f.write( s )
+                    f.close()
+                    f = open( "lines.dat", "wb" )
+                    s = marshal.dumps( self.lines )
+                    f.write( s )
+                    f.close()
 
-            try:
-                os.remove( 'words.dat' )
-                os.remove( 'lines.dat' )
-                os.remove( 'version' )
-            except ( OSError, IOError ), e:
-                print "could not remove the files"
-
-            f = open( "words.txt", "w" )
-            # write each words known
-            wordlist = []
-            #Sort the list befor to export
-            for key in self.words.keys():
-                wordlist.append( [key, len( self.words[key] )] )
-            wordlist.sort( lambda x, y: cmp( x[1], y[1] ) )
-            #map( ( lambda x: f.write( str( x[0] ) + "\n\r" ) ), wordlist )
-            [ f.write( str( x[0] ) + "\n\r" ) for x in wordlist]
-            f.close()
-
-            f = open( "sentences.txt", "w" )
-            # write each words known
-            wordlist = []
-            #Sort the list befor to export
-            for key in self.unfilterd.keys():
-                wordlist.append( [key, self.unfilterd[key]] )
-            wordlist.sort( lambda x, y: cmp( y[1], x[1] ) )
-            #map( ( lambda x: f.write( str( x[0] ) + "\n" ) ), wordlist )
-            [ f.write( str( x[0] ) + "\n" ) for x in wordlist ]
-            f.close()
+                    #save the version
+                    f = open( "version", "w" )
+                    f.write( self.saves_version )
+                    f.close()
 
 
-            # Save settings
-            self.settings.save()
+                    #zip the files
+                    f = zipfile.ZipFile( 'archive.zip', 'w', zipfile.ZIP_DEFLATED )
+                    f.write( 'words.dat' )
+                    f.write( 'lines.dat' )
+                    f.write( 'version' )
+                    f.close()
+
+                    try:
+                        os.remove( 'words.dat' )
+                        os.remove( 'lines.dat' )
+                        os.remove( 'version' )
+                    except ( OSError, IOError ), e:
+                        print "could not remove the files"
+
+                    f = open( "words.txt", "w" )
+                    # write each words known
+                    wordlist = []
+                    #Sort the list befor to export
+                    for key in self.words.keys():
+                        wordlist.append( [key, len( self.words[key] )] )
+                    wordlist.sort( lambda x, y: cmp( x[1], y[1] ) )
+                    #map( ( lambda x: f.write( str( x[0] ) + "\n\r" ) ), wordlist )
+                    [ f.write( str( x[0] ) + "\n\r" ) for x in wordlist]
+                    f.close()
+
+                    f = open( "sentences.txt", "w" )
+                    # write each words known
+                    wordlist = []
+                    #Sort the list befor to export
+                    for key in self.unfilterd.keys():
+                        wordlist.append( [key, self.unfilterd[key]] )
+                    wordlist.sort( lambda x, y: cmp( y[1], x[1] ) )
+                    #map( ( lambda x: f.write( str( x[0] ) + "\n" ) ), wordlist )
+                    [ f.write( str( x[0] ) + "\n" ) for x in wordlist ]
+                    f.close()
+
+
+                    # Save settings
+                    self.settings.save()
+                    return True
+            finally : 
+                self.saving = False
 
     def process_msg( self, io_module, body, replyrate, learn, args, owner = 0 ):
         """
