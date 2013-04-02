@@ -252,12 +252,12 @@ class pyborg:
     # Saves all dictionaries and words and contexts, everything.
     # @return returns true if successfully saved, or false if it failed.
     def save_all( self ):
-        if self.saving :
-            print "Cannot save because currently saving." 
+        if self.saving:
+            print "Cannot save because currently saving."
             return False
-        else : 
+        else:
             self.saving = True
-            try : 
+            try:
                 if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
                     print "Writing dictionary..."
 
@@ -327,7 +327,7 @@ class pyborg:
                     # Save settings
                     self.settings.save()
                     return True
-            finally : 
+            finally:
                 self.saving = False
 
     def process_msg( self, io_module, body, replyrate, learn, args, owner = 0 ):
