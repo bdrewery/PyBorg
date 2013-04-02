@@ -326,6 +326,8 @@ class pyborg:
 
                     # Save settings
                     self.settings.save()
+
+                    print "Dictionary saved."
                     return True
             finally:
                 self.saving = False
