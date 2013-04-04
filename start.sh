@@ -1,8 +1,5 @@
 #! /bin/sh
 
-mkdir data 2>/dev/null || :
-cd data/
-
 PYTHON=$(which pypy 2>/dev/null)
 if [ -z "$PYTHON" ]; then
   PYTHON=python
@@ -16,5 +13,8 @@ if ! [ -L lib/pyborg/irclib.py ]; then
 	ln -s ../irclib/irclib.py lib/pyborg/irclib.py
 	ln -s ../irclib/ircbot.py lib/pyborg/ircbot.py
 fi
+
+mkdir data 2>/dev/null || :
+cd data/
 
 exec nice ${PYTHON} ../lib/pyborg/pyborg-irc.py
