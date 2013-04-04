@@ -14,7 +14,10 @@ if ! [ -L lib/pyborg/irclib.py ]; then
 	ln -s ../irclib/ircbot.py lib/pyborg/ircbot.py
 fi
 
-mkdir data 2>/dev/null || :
-cd data/
+DATADIR=${1:-data}
+PYBORG=${2:-pyborg-irc.py}
 
-exec nice ${PYTHON} ../lib/pyborg/pyborg-irc.py
+mkdir $DATADIR 2>/dev/null || :
+cd ${DATADIR}/
+
+exec nice ${PYTHON} ../lib/pyborg/${PYBORG}
