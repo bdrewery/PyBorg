@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# vim: set sw=4 sts=4 noet:
 #
 # PyBorg IRC module
 #

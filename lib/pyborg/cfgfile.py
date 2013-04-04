@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# vim: set sw=4 sts=4 noet:
 #
 # PyBorg: The python AI bot.
 #
