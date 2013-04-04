@@ -443,8 +443,10 @@ class pyborg:
         if owner == 1:
             # Save dictionary
             if command_list[0] == "!save":
-                self.save_all()
-                msg = "Dictionary saved"
+                if self.save_all():
+                    msg = "Dictionary saved"
+                else:
+                    msg = "Already saving"
 
             # Command list
             elif command_list[0] == "!help":
