@@ -28,7 +28,7 @@ try:
     from ircbot import *
     from irclib import *
 except:
-    print "ERROR !!!!\nircbot.py and irclib.py not found, please install them\n( http://python-irclib.sourceforge.net/ )"
+    print "ERROR !!!!\nircbot.py and irclib.py not found, please install them\n(http://python-irclib.sourceforge.net/)"
     sys.exit(1)
 
 #overide irclib function
@@ -117,7 +117,7 @@ class ModIRC(SingleServerIRCBot):
                   "quitmsg": ("IRC quit message", "Bye :-("),
                   "password": ("password for control the bot (Edit manually !)", ""),
                   "autosaveperiod": ("Save every X minutes. Leave at 0 for no saving.", 60)
-                } )
+                })
 
         # If autosaveperiod is set, trigger it.
         asp = self.settings.autosaveperiod
@@ -144,7 +144,7 @@ class ModIRC(SingleServerIRCBot):
                     # Default port if none specified
                     if len(server) == 1:
                         server.append("6667")
-                    self.settings.servers.append( (server[0], int(server[1])) )
+                    self.settings.servers.append((server[0], int(server[1])))
             # Channels
             if args[x] == "-c":
                 self.settings.chans = []
@@ -285,7 +285,7 @@ class ModIRC(SingleServerIRCBot):
 
         # WHOOHOOO!!
         if target == self.settings.myname or source == self.settings.myname:
-            print "[%s] <%s> > %s> %s" % ( get_time(), source, target, body)
+            print "[%s] <%s> > %s> %s" % (get_time(), source, target, body)
 
         # Ignore self.
         if source == self.settings.myname: return
@@ -325,7 +325,7 @@ class ModIRC(SingleServerIRCBot):
         replyrate = self.settings.speaking * self.settings.reply_chance
 
         # double reply chance if the text contains our nickname :-)
-        if body.lower().find(self.settings.myname.lower() ) != -1:
+        if body.lower().find(self.settings.myname.lower()) != -1:
             replyrate = replyrate * 2
 
         # Always reply to private messages
@@ -562,16 +562,16 @@ class ModIRC(SingleServerIRCBot):
         # Joins replies and public messages
         if e.eventtype() == "join" or e.eventtype() == "quit" or e.eventtype() == "part" or e.eventtype() == "pubmsg":
             if action == 0:
-                print "[%s] <%s> > %s> %s" % ( get_time(), self.settings.myname, target, message)
+                print "[%s] <%s> > %s> %s" % (get_time(), self.settings.myname, target, message)
                 c.privmsg(target, message)
             else:
-                print "[%s] <%s> > %s> /me %s" % ( get_time(), self.settings.myname, target, message)
+                print "[%s] <%s> > %s> /me %s" % (get_time(), self.settings.myname, target, message)
                 c.action(target, message)
         # Private messages
         elif e.eventtype() == "privmsg":
             # normal private msg
             if action == 0:
-                print "[%s] <%s> > %s> %s" % ( get_time(), self.settings.myname, source, message)
+                print "[%s] <%s> > %s> %s" % (get_time(), self.settings.myname, source, message)
                 c.privmsg(source, message)
                 # send copy to owner
                 if not source in self.owners:
@@ -579,12 +579,12 @@ class ModIRC(SingleServerIRCBot):
                     c.privmsg(','.join(self.owners), "(To   "+source+") "+message)
             # ctcp action priv msg
             else:
-                print "[%s] <%s> > %s> /me %s" % ( get_time(), self.settings.myname, target, message)
+                print "[%s] <%s> > %s> /me %s" % (get_time(), self.settings.myname, target, message)
                 c.action(source, message)
                 # send copy to owner
                 if not source in self.owners:
-                    map ( ( lambda x: c.action(x, "(From "+source+") "+body) ), self.owners)
-                    map ( ( lambda x: c.action(x, "(To   "+source+") "+message) ), self.owners)
+                    map ((lambda x: c.action(x, "(From "+source+") "+body)), self.owners)
+                    map ((lambda x: c.action(x, "(To   "+source+") "+message)), self.owners)
 
     ##
     # This function schedules autosave_execute to happen every asp minutes

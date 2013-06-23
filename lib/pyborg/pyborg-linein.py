@@ -55,7 +55,7 @@ class ModLineIn:
                 if self.linein_commands(body):
                     continue
             # Pass message to borg
-            self.pyborg.process_msg(self, body, 100, 1, ( name ), owner = 1)
+            self.pyborg.process_msg(self, body, 100, 1, (name), owner = 1)
 
     def linein_commands(self, body):
         command_list = string.split(body)

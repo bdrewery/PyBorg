@@ -32,7 +32,7 @@ import thread
 try:
     import msnp
 except:
-    print "ERROR !!!!\msnp not found, please install it ( http://msnp.sourceforge.net/ )"
+    print "ERROR !!!!\msnp not found, please install it (http://msnp.sourceforge.net/)"
     sys.exit(1)
 
 def get_time():
@@ -59,7 +59,7 @@ class ModMSN(msnp.Session, msnp.ChatCallbacks):
                   "msn_password": ("Reported password account", "password"),
                   "owners": ("Owner(s) passport account", [ "owner@hotmail.com" ]),
                   "password": ("password for control the bot (Edit manually !)", "")
-                } )
+                })
 
 
         self.owners = self.settings.owners[:]
@@ -135,8 +135,8 @@ class ModMSN(msnp.Session, msnp.ChatCallbacks):
 
             message = message.replace("#nick", display_name)
 
-            print "[%s] <%s> > %s> %s" % ( get_time(), display_name, bot.display_name, text)
-            print "[%s] <%s> > %s> %s" % ( get_time(), bot.display_name, display_name, message)
+            print "[%s] <%s> > %s> %s" % (get_time(), display_name, bot.display_name, text)
+            print "[%s] <%s> > %s> %s" % (get_time(), bot.display_name, display_name, message)
             self.chat.send_message(message, charset)
 
 
