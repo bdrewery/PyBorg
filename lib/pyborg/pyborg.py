@@ -34,6 +34,7 @@ import struct
 import time
 import zipfile
 import re
+import tempfile
 
 
 def filter_message(message, bot):
@@ -263,30 +264,23 @@ class pyborg:
                 if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
                     print "Writing dictionary..."
 
-                    with open("words.dat", "wb") as f:
-                        s = marshal.dumps(self.words)
-                        f.write(s)
-                    with open("lines.dat", "wb") as f:
-                        s = marshal.dumps(self.lines)
-                        f.write(s)
-
-                    #save the version
-                    with open("version", "w") as f:
-                        f.write(self.saves_version)
-
-                    #zip the files
-                    f = zipfile.ZipFile('archive.zip', 'w', zipfile.ZIP_DEFLATED)
-                    f.write('words.dat')
-                    f.write('lines.dat')
-                    f.write('version')
-                    f.close()
-
-                    try:
-                        os.remove('words.dat')
-                        os.remove('lines.dat')
-                        os.remove('version')
-                    except (OSError, IOError), e:
-                        print "could not remove the files"
+                    with zipfile.ZipFile('archive.zip', 'w',
+                                         zipfile.ZIP_DEFLATED) as z:
+                        with tempfile.NamedTemporaryFile() as f:
+                            s = marshal.dumps(self.words)
+                            f.write(s)
+                            f.flush()
+                            z.write(f.name, 'words.dat')
+                        with tempfile.NamedTemporaryFile() as f:
+                            s = marshal.dumps(self.lines)
+                            f.write(s)
+                            f.flush()
+                            z.write(f.name, 'lines.dat')
+                        #save the version
+                        with tempfile.NamedTemporaryFile() as f:
+                            f.write(self.saves_version)
+                            f.flush()
+                            z.write(f.name, 'version')
 
                     with open("words.txt", "w") as f:
                         # write each words known
