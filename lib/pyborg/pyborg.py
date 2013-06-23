@@ -262,16 +262,6 @@ class pyborg:
                 if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
                     print "Writing dictionary..."
 
-                    try:
-                        zfile = zipfile.ZipFile('archive.zip', 'r')
-                        for filename in zfile.namelist():
-                            data = zfile.read(filename)
-                            file = open(filename, 'w+b')
-                            file.write(data)
-                            file.close()
-                    except (OSError, IOError), e:
-                        print "no zip found. Is the programm launch for first time ?"
-
                     with open("words.dat", "wb") as f:
                         s = marshal.dumps(self.words)
                         f.write(s)
