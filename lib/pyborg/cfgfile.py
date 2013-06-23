@@ -22,7 +22,7 @@
 #
 import string
 import os
-import tempfile
+from atomicfile import AtomicFile
 
 def _load_config(filename):
     """
@@ -62,30 +62,21 @@ def _save_config(filename, fields):
     fields should be a dictionary. Keys as names of
     variables containing tuple (string comment, value).
     """
-    tmpFile = None
-    try:
-        with tempfile.NamedTemporaryFile(dir=os.path.dirname(filename),
-                                         delete=False) as f:
-            tmpFile = f.name
-            # write the values with comments. this is a silly comment
-            for key in fields.keys():
-                f.write("# "+fields[key][0]+"\n")
-                s = repr(fields[key][1])
-                f.write(key+"\t= ")
-                if len(s) > 80:
-                    cut_string = ""
-                    while len(s) > 80:
-                        position = s.rfind(",",0,80)+1
-                        cut_string = cut_string + s[:position] + "\\\n\t\t"
-                        s = s[position:]
-                    s = cut_string + s
-                f.write(s+"\n")
-        os.rename(tmpFile, filename)
-    except (OSError, IOError), e:
-        if tmpFile:
-            os.unlink(tmpFile)
-
-
+    # Must use same dir to be truly atomic
+    with AtomicFile(filename, 'w') as f:
+        # write the values with comments. this is a silly comment
+        for key in fields.keys():
+            f.write("# "+fields[key][0]+"\n")
+            s = repr(fields[key][1])
+            f.write(key+"\t= ")
+            if len(s) > 80:
+                cut_string = ""
+                while len(s) > 80:
+                    position = s.rfind(",",0,80)+1
+                    cut_string = cut_string + s[:position] + "\\\n\t\t"
+                    s = s[position:]
+                s = cut_string + s
+            f.write(s+"\n")
 
 class cfgset:
     def load(self, filename, defaults):
