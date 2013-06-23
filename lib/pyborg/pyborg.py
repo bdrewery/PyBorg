@@ -34,7 +34,6 @@ import struct
 import time
 import zipfile
 import re
-import tempfile
 
 
 def filter_message(message, bot):
@@ -266,21 +265,12 @@ class pyborg:
 
                     with zipfile.ZipFile('archive.zip', 'w',
                                          zipfile.ZIP_DEFLATED) as z:
-                        with tempfile.NamedTemporaryFile() as f:
-                            s = marshal.dumps(self.words)
-                            f.write(s)
-                            f.flush()
-                            z.write(f.name, 'words.dat')
-                        with tempfile.NamedTemporaryFile() as f:
-                            s = marshal.dumps(self.lines)
-                            f.write(s)
-                            f.flush()
-                            z.write(f.name, 'lines.dat')
+                        s = marshal.dumps(self.words)
+                        z.writestr('words.dat', s)
+                        s = marshal.dumps(self.lines)
+                        z.writestr('lines.dat', s)
                         #save the version
-                        with tempfile.NamedTemporaryFile() as f:
-                            f.write(self.saves_version)
-                            f.flush()
-                            z.write(f.name, 'version')
+                        z.writestr('version', self.saves_version)
 
                     with open("words.txt", "w") as f:
                         # write each words known
