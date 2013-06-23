@@ -21,6 +21,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 import string
+import os
+import tempfile
 
 def _load_config(filename):
     """
@@ -60,23 +62,29 @@ def _save_config(filename, fields):
     fields should be a dictionary. Keys as names of
     variables containing tuple (string comment, value).
     """
-    f = open(filename, "w")
+    tmpFile = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=os.path.dirname(filename),
+                                         delete=False) as f:
+            tmpFile = f.name
+            # write the values with comments. this is a silly comment
+            for key in fields.keys():
+                f.write("# "+fields[key][0]+"\n")
+                s = repr(fields[key][1])
+                f.write(key+"\t= ")
+                if len(s) > 80:
+                    cut_string = ""
+                    while len(s) > 80:
+                        position = s.rfind(",",0,80)+1
+                        cut_string = cut_string + s[:position] + "\\\n\t\t"
+                        s = s[position:]
+                    s = cut_string + s
+                f.write(s+"\n")
+        os.rename(tmpFile, filename)
+    except (OSError, IOError), e:
+        if tmpFile:
+            os.unlink(tmpFile)
 
-    # write the values with comments. this is a silly comment
-    for key in fields.keys():
-        f.write("# "+fields[key][0]+"\n")
-        s = repr(fields[key][1])
-        f.write(key+"\t= ")
-        if len(s) > 80:
-            cut_string = ""
-            while len(s) > 80:
-                position = s.rfind(",",0,80)+1
-                cut_string = cut_string + s[:position] + "\\\n\t\t"
-                s = s[position:]
-            s = cut_string + s
-        f.write(s+"\n")
-
-    f.close()
 
 
 class cfgset:
