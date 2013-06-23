@@ -272,21 +272,16 @@ class pyborg:
                     except (OSError, IOError), e:
                         print "no zip found. Is the programm launch for first time ?"
 
-
-                    f = open("words.dat", "wb")
-                    s = marshal.dumps(self.words)
-                    f.write(s)
-                    f.close()
-                    f = open("lines.dat", "wb")
-                    s = marshal.dumps(self.lines)
-                    f.write(s)
-                    f.close()
+                    with open("words.dat", "wb") as f:
+                        s = marshal.dumps(self.words)
+                        f.write(s)
+                    with open("lines.dat", "wb") as f:
+                        s = marshal.dumps(self.lines)
+                        f.write(s)
 
                     #save the version
-                    f = open("version", "w")
-                    f.write(self.saves_version)
-                    f.close()
-
+                    with open("version", "w") as f:
+                        f.write(self.saves_version)
 
                     #zip the files
                     f = zipfile.ZipFile('archive.zip', 'w', zipfile.ZIP_DEFLATED)
@@ -302,28 +297,25 @@ class pyborg:
                     except (OSError, IOError), e:
                         print "could not remove the files"
 
-                    f = open("words.txt", "w")
-                    # write each words known
-                    wordlist = []
-                    #Sort the list befor to export
-                    for key in self.words.keys():
-                        wordlist.append([key, len(self.words[key])])
-                    wordlist.sort(lambda x, y: cmp(x[1], y[1]))
-                    #map((lambda x: f.write(str(x[0]) + "\n\r")), wordlist)
-                    [ f.write(str(x[0]) + "\n\r") for x in wordlist]
-                    f.close()
+                    with open("words.txt", "w") as f:
+                        # write each words known
+                        wordlist = []
+                        #Sort the list befor to export
+                        for key in self.words.keys():
+                            wordlist.append([key, len(self.words[key])])
+                        wordlist.sort(lambda x, y: cmp(x[1], y[1]))
+                        #map((lambda x: f.write(str(x[0]) + "\n\r")), wordlist)
+                        [ f.write(str(x[0]) + "\n\r") for x in wordlist]
 
-                    f = open("sentences.txt", "w")
-                    # write each words known
-                    wordlist = []
-                    #Sort the list befor to export
-                    for key in self.unfilterd.keys():
-                        wordlist.append([key, self.unfilterd[key]])
-                    wordlist.sort(lambda x, y: cmp(y[1], x[1]))
-                    #map((lambda x: f.write(str(x[0]) + "\n")), wordlist)
-                    [ f.write(str(x[0]) + "\n") for x in wordlist ]
-                    f.close()
-
+                    with open("sentences.txt", "w") as f:
+                        # write each words known
+                        wordlist = []
+                        #Sort the list befor to export
+                        for key in self.unfilterd.keys():
+                            wordlist.append([key, self.unfilterd[key]])
+                        wordlist.sort(lambda x, y: cmp(y[1], x[1]))
+                        #map((lambda x: f.write(str(x[0]) + "\n")), wordlist)
+                        [ f.write(str(x[0]) + "\n") for x in wordlist ]
 
                     # Save settings
                     self.settings.save()
