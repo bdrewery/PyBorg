@@ -170,14 +170,17 @@ class pyborg:
             try:
 
                 content = self.read_file("version")
+                os.unlink('version')
                 if content != self.saves_version:
                     print "Error loading dictionary\Please convert it before launching pyborg"
                     sys.exit(1)
 
                 content = self.read_file("words.dat")
+                os.unlink('words.dat')
                 self.words = marshal.loads(content)
                 del content
                 content = self.read_file("lines.dat")
+                os.unlink('lines.dat')
                 self.lines = marshal.loads(content)
                 del content
             except (EOFError, IOError):
