@@ -247,10 +247,8 @@ class pyborg:
     def read_file(file_name):
         """ Return the content of a File
         """
-        _file = open(file_name, "rb")
-        data = _file.read()
-        _file.close()
-        return data
+        with open(file_name, 'rb') as f:
+            return f.read()
 
     ##
     # Saves all dictionaries and words and contexts, everything.
