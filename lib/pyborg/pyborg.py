@@ -34,6 +34,7 @@ import struct
 import time
 import zipfile
 import re
+from atomicfile import AtomicFile
 
 
 def filter_message(message, bot):
@@ -276,7 +277,7 @@ class pyborg:
                                             ('words.txt', self.words),
                                             ('sentences.txt', self.unfilterd),
                                           ]:
-                        with open(filename, "w") as f:
+                        with AtomicFile(filename, 'w') as f:
                             # write each words known
                             wordlist = []
                             #Sort the list befor to export
