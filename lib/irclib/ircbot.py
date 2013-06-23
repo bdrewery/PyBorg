@@ -1,5 +1,5 @@
 # Copyright (C) 1999--2002  Joel Rosdahl
-# vim: set sw=4 sts=4 et:
+# vim: set sw=4 sts=4 ts=8 et:
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# vim: set sw=4 sts=4 noet:
+# vim: set sw=4 sts=4 ts=8 et:
 #
 # PyBorg Telnet module (fairly raw 'telnet'...)
 # Defaults to listening on port 8489

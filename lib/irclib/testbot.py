@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 #
+# vim: set sw=4 sts=4 ts=8 et:
 # Example program using ircbot.py.
 #
 # Joel Rosdahl <joel@rosdahl.net>

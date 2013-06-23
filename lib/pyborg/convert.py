@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# vim: set sw=4 sts=4 noet:
+# vim: set sw=4 sts=4 ts=8 et:
 #
 # Use to convert pyborg 0.9.10 and 0.9.11 dictionaries to the
 # version 1.0.0+ format.
