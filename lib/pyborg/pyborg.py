@@ -1007,9 +1007,7 @@ class pyborg:
             if mot == ['']:
                 done = 1
             else:
-                for x in mot:
-                    sentence.append( x )
-                #[ sentence.append( x ) for x in mot]
+                [ sentence.append( x ) for x in mot]
                 #map( ( lambda x: sentence.append( x ) ), mot )
 
         sentence = pre_words[:-2] + sentence
