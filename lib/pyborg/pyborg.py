@@ -272,25 +272,19 @@ class pyborg:
                         #save the version
                         z.writestr('version', self.saves_version)
 
-                    with open("words.txt", "w") as f:
-                        # write each words known
-                        wordlist = []
-                        #Sort the list befor to export
-                        for key in self.words.keys():
-                            wordlist.append([key, len(self.words[key])])
-                        wordlist.sort(lambda x, y: cmp(x[1], y[1]))
-                        #map((lambda x: f.write(str(x[0]) + "\n\r")), wordlist)
-                        [ f.write(str(x[0]) + "\n\r") for x in wordlist]
-
-                    with open("sentences.txt", "w") as f:
-                        # write each words known
-                        wordlist = []
-                        #Sort the list befor to export
-                        for key in self.unfilterd.keys():
-                            wordlist.append([key, self.unfilterd[key]])
-                        wordlist.sort(lambda x, y: cmp(y[1], x[1]))
-                        #map((lambda x: f.write(str(x[0]) + "\n")), wordlist)
-                        [ f.write(str(x[0]) + "\n") for x in wordlist ]
+                    for filename, data in [
+                                            ('words.txt', self.words),
+                                            ('sentences.txt', self.unfilterd),
+                                          ]:
+                        with open(filename, "w") as f:
+                            # write each words known
+                            wordlist = []
+                            #Sort the list befor to export
+                            for key in data.keys():
+                                wordlist.append([key, len(data[key])])
+                            wordlist.sort(lambda x, y: cmp(x[1], y[1]))
+                            #map((lambda x: f.write(str(x[0]) + "\n\r")), wordlist)
+                            [ f.write(str(x[0]) + "\n\r") for x in wordlist]
 
                     # Save settings
                     self.settings.save()
