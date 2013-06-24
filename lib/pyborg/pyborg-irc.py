@@ -511,7 +511,7 @@ class ModIRC(SingleServerIRCBot):
             elif command_list[0] == "!me":
                 if len(command_list) >= 2:
                     phrase=""
-                    for x in range (2, len (command_list)):
+                    for x in xrange (2, len (command_list)):
                         phrase = phrase + str(command_list[x]) + " "
                     self.output("\x01ACTION " + phrase + "\x01", ("", command_list[1], "", c, e))
             # Save changes
