@@ -891,6 +891,7 @@ class pyborg:
                 x += 1
                 if x >= len(liste) - 1:
                     mot = ''
+                    break
                 mot = liste[x][0]
 
             mot = mot.split(" ")
