@@ -812,7 +812,6 @@ class pyborg:
                 dellist.append(x)
                 del self.lines[x]
         words = self.words
-        unpack = struct.unpack
         # update links
         for x in wordlist:
             word_contexts = words[x]
@@ -820,9 +819,9 @@ class pyborg:
             for y in xrange(len(word_contexts) - 1, -1, -1):
                 # Check for any of the deleted contexts
                 if len(word_contexts[y]) == 10:
-                    unpacked = unpack( "lH", word_contexts[y] )[0]
+                    unpacked = struct.unpack( "lH", word_contexts[y] )[0]
                 else:
-                    unpacked = unpack( "iH", word_contexts[y] )[0]
+                    unpacked = struct.unpack( "iH", word_contexts[y] )[0]
                 if unpacked in dellist:
                     del word_contexts[y]
                     self.settings.num_contexts = self.settings.num_contexts - 1
