@@ -35,6 +35,7 @@ import time
 import zipfile
 import re
 from atomicfile import AtomicFile
+import ctypes
 
 
 def filter_message(message, bot):
@@ -1061,7 +1062,7 @@ class pyborg:
             cleanbody = " ".join(words)
 
             # Hash collisions we don't care about. 2^32 is big :-)
-            hashval = hash(cleanbody)
+            hashval = ctypes.c_int32(hash(cleanbody)).value
 
             # Check context isn't already known
             if not self.lines.has_key(hashval):
