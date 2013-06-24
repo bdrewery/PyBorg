@@ -119,7 +119,7 @@ class pyborg:
         "known": "Usage: !known word1 [word2 [...]]\nDisplays if one or more words are known, and how many contexts are known",
         "contexts": "Owner command. Usage: !contexts <phrase>\nPrint contexts containing <phrase>",
         "unlearn": "Owner command. Usage: !unlearn <expression>\nRemove all occurances of a word or expression from the dictionary. For example '!unlearn of of' would remove all contexts containing double 'of's",
-        "purge": "Owner command. Usage: !purge [number]\nRemove all occurances of the words that appears in less than <number> contexts",
+        "purge": "Owner command. Usage: !purge [number]\nRemove up to <number> words that appears in less than 2 contexts. Specify 0 to see how many are eligible to remove.",
         "replace": "Owner command. Usage: !replace <old> <new>\nReplace all occurances of word <old> in the dictionary with <new>",
         "learning": "Owner command. Usage: !learning [on|off]\nToggle bot learning. Without arguments shows the current setting",
         "checkdict": "Owner command. Usage: !checkdict\nChecks the dictionary for broken links. Shouldn't happen, but worth trying if you get KeyError crashes",
