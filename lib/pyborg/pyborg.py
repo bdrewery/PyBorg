@@ -819,7 +819,11 @@ class pyborg:
             # Check all the word's links (backwards so we can delete)
             for y in xrange(len(word_contexts) - 1, -1, -1):
                 # Check for any of the deleted contexts
-                if unpack("iH", word_contexts[y])[0] in dellist:
+                if len(word_contexts[y]) == 10:
+                    unpacked = unpack( "lH", word_contexts[y] )[0]
+                else:
+                    unpacked = unpack( "iH", word_contexts[y] )[0]
+                if unpacked in dellist:
                     del word_contexts[y]
                     self.settings.num_contexts = self.settings.num_contexts - 1
             if len(words[x]) == 0:
