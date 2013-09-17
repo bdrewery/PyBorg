@@ -74,6 +74,7 @@ class AtomicFile(object):
 
     def close(self):
         if not self._fp.closed:
+            os.fsync(self._fp.fileno())
             self._fp.close()
             os.rename(self._tempname, self.__name)
 
