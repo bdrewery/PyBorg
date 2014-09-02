@@ -653,6 +653,7 @@ class ModIRC(SingleServerIRCBot):
     # @param asp the autosave period, configured on pyborg-irc.cfg, in minutes.
     def autosave_schedule(self, asp) :
         timer = Timer(asp * 60, self.autosave_execute, ())
+        self.should_autosave = True
         timer.setDaemon(True)
         timer.start()
 
@@ -660,8 +661,12 @@ class ModIRC(SingleServerIRCBot):
     # This function gets called every autosaveperiod minutes, and executes the autosaving.
     # @param asp autosaveperiod, see above.
     def autosave_execute(self) :
-        self.pyborg.save_all()
-        self.autosave_schedule(self.settings.autosaveperiod)
+        if self.should_autosave:
+            self.pyborg.save_all()
+            self.autosave_schedule(self.settings.autosaveperiod)
+
+    def autosave_stop(self):
+        self.should_autosave = False
 
 if __name__ == "__main__":
 
@@ -688,6 +693,7 @@ if __name__ == "__main__":
         c = raw_input("Ooops! It looks like Pyborg has crashed. Would you like to save its dictionary? (y/n) ")
         if c.lower()[:1] == 'n':
             sys.exit(0)
+    bot.autosave_stop()
     bot.disconnect(bot.settings.quitmsg)
     if my_pyborg.saving:
         while my_pyborg.saving:
