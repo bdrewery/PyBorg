@@ -174,8 +174,6 @@ class ModIRC(SingleServerIRCBot):
         self.start()
 
     def on_welcome(self, c, e):
-        if self.feature_monitor:
-            c.send_raw("MONITOR + %s" % self.wanted_myname)
         print self.chans
         for i in self.chans:
             c.join(i)
@@ -241,6 +239,7 @@ class ModIRC(SingleServerIRCBot):
             if feature[:8] == "MONITOR=":
                 print "MONITOR supported."
                 self.feature_monitor = True
+                c.send_raw("MONITOR + %s" % self.wanted_myname)
                 break
 
     def _failed_new_nickname(self, c, e):
