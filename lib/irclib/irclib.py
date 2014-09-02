@@ -1532,6 +1532,7 @@ numeric_events = {
     "492": "noservicehost",
     "501": "umodeunknownflag",
     "502": "usersdontmatch",
+    "731": "monoffline",
 }
 
 generated_events = [

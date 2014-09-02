@@ -131,6 +131,7 @@ class ModIRC(SingleServerIRCBot):
         self.inchans = []
         self.wanted_myname = self.settings.myname
         self.attempting_regain = False
+        self.feature_monitor = False
 
         # Parse command prompt parameters
 
@@ -171,6 +172,8 @@ class ModIRC(SingleServerIRCBot):
         self.start()
 
     def on_welcome(self, c, e):
+        if self.feature_monitor:
+            c.send_raw("MONITOR + %s" % self.wanted_myname)
         print self.chans
         for i in self.chans:
             c.join(i)
@@ -231,11 +234,21 @@ class ModIRC(SingleServerIRCBot):
     def on_privmsg(self, c, e):
         self.on_msg(c, e)
 
+    def on_featurelist(self, c, e):
+        for feature in e.arguments():
+            if feature[:8] == "MONITOR=":
+                print "MONITOR supported."
+                self.feature_monitor = True
+                break
+
     def _failed_new_nickname(self, c, e):
         if self.attempting_regain is False:
             self.settings.myname = c.get_nickname()[:8] + `random.randint(0, 9)`
             self.connection.nick(self.settings.myname)
         else:
+            if self.feature_monitor:
+                # A collision may have occurred, check again.
+                c.send_raw("MONITOR s")
             self.settings.myname = c.get_nickname()
             self.attempting_regain = False
 
@@ -262,6 +275,7 @@ class ModIRC(SingleServerIRCBot):
 #               self.channels = IRCDict()
         print "deconnection"
         self.attempting_regain = False
+        self.feature_monitor = False
         self.connection.execute_delayed(self.reconnection_interval, self._connected_checker)
 
 
@@ -559,9 +573,16 @@ class ModIRC(SingleServerIRCBot):
 
     def _nick_checker(self):
         if (self.connection.is_connected() and
+            self.feature_monitor is False and
             self.connection.get_nickname() != self.wanted_myname):
                self.connection.ison([self.wanted_myname])
         self.connection.execute_delayed(20, self._nick_checker)
+
+    def _try_regain(self, nick):
+            print "Attempting to regain nickname %s" % nick
+            self.attempting_regain = True
+            self.settings.myname = nick
+            self.connection.nick(self.settings.myname)
 
     def on_ison(self, c, e):
         nick_found = False
@@ -570,10 +591,13 @@ class ModIRC(SingleServerIRCBot):
                 nick_found = True
                 break
         if not nick_found:
-            print "Attempting to regain nickname %s" % self.wanted_myname
-            self.attempting_regain = True
-            self.settings.myname = self.wanted_myname
-            self.connection.nick(self.settings.myname)
+            self._try_regain(self.wanted_myname)
+
+    def on_monoffline(self, c, e):
+        for nick in e.arguments()[0].split(','):
+            if nick == self.wanted_myname:
+                self._try_regain(self.wanted_myname)
+                break
 
     def output(self, message, args):
         """
