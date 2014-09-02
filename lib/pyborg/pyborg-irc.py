@@ -689,5 +689,10 @@ if __name__ == "__main__":
         if c.lower()[:1] == 'n':
             sys.exit(0)
     bot.disconnect(bot.settings.quitmsg)
-    my_pyborg.save_all()
+    if my_pyborg.saving:
+        while my_pyborg.saving:
+            print "Waiting for save in other thread..."
+            time.sleep(1)
+    else:
+        my_pyborg.save_all()
     del my_pyborg
