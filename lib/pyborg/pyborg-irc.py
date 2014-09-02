@@ -130,6 +130,7 @@ class ModIRC(SingleServerIRCBot):
         self.chans = self.settings.chans[:]
         self.inchans = []
         self.wanted_myname = self.settings.myname
+        self.attempting_regain = False
 
         # Parse command prompt parameters
 
@@ -166,6 +167,7 @@ class ModIRC(SingleServerIRCBot):
         SingleServerIRCBot.__init__(self, self.settings.servers, self.settings.myname, self.settings.realname, 2, self.settings.localaddress, self.settings.ipv6)
 
         self.connection.execute_delayed(20, self._chan_checker)
+        self.connection.execute_delayed(20, self._nick_checker)
         self.start()
 
     def on_welcome(self, c, e):
@@ -229,9 +231,22 @@ class ModIRC(SingleServerIRCBot):
     def on_privmsg(self, c, e):
         self.on_msg(c, e)
 
+    def _failed_new_nickname(self, c, e):
+        if self.attempting_regain is False:
+            self.settings.myname = c.get_nickname()[:8] + `random.randint(0, 9)`
+            self.connection.nick(self.settings.myname)
+        else:
+            self.settings.myname = c.get_nickname()
+            self.attempting_regain = False
+
     def on_nicknameinuse(self, c, e):
-        self.settings.myname = c.get_nickname()[:8] + `random.randint(0, 9)`
-        self.connection.nick(self.settings.myname)
+        self._failed_new_nickname(c, e)
+
+    def on_erroneusnickname(self, c, e):
+        self._failed_new_nickname( c, e)
+
+    def on_unavailresource(self, c, e):
+        self._failed_new_nickname(c, e)
 
     def on_pubmsg(self, c, e):
         self.on_msg(c, e)
@@ -246,6 +261,7 @@ class ModIRC(SingleServerIRCBot):
     def _on_disconnect(self, c, e):
 #               self.channels = IRCDict()
         print "deconnection"
+        self.attempting_regain = False
         self.connection.execute_delayed(self.reconnection_interval, self._connected_checker)
 
 
@@ -540,6 +556,24 @@ class ModIRC(SingleServerIRCBot):
                     print "Attempting to rejoin %s" % i
                     self.connection.join(i)
         self.connection.execute_delayed(20, self._chan_checker)
+
+    def _nick_checker(self):
+        if (self.connection.is_connected() and
+            self.connection.get_nickname() != self.wanted_myname):
+               self.connection.ison([self.wanted_myname])
+        self.connection.execute_delayed(20, self._nick_checker)
+
+    def on_ison(self, c, e):
+        nick_found = False
+        for nick in e.arguments()[0].split():
+            if nick == self.wanted_myname:
+                nick_found = True
+                break
+        if not nick_found:
+            print "Attempting to regain nickname %s" % self.wanted_myname
+            self.attempting_regain = True
+            self.settings.myname = self.wanted_myname
+            self.connection.nick(self.settings.myname)
 
     def output(self, message, args):
         """
