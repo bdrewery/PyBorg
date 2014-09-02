@@ -588,7 +588,7 @@ class ModIRC(SingleServerIRCBot):
     def on_ison(self, c, e):
         nick_found = False
         for nick in e.arguments()[0].split():
-            if nick == self.wanted_myname:
+            if nick.lower() == self.wanted_myname.lower():
                 nick_found = True
                 break
         if not nick_found:
@@ -596,7 +596,7 @@ class ModIRC(SingleServerIRCBot):
 
     def on_monoffline(self, c, e):
         for nick in e.arguments()[0].split(','):
-            if nick == self.wanted_myname:
+            if nick.lower() == self.wanted_myname.lower():
                 self._try_regain(self.wanted_myname)
                 break
 
