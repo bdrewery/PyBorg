@@ -70,7 +70,7 @@ class ModIRC(SingleServerIRCBot):
 
     # Command list for this module
     commandlist =   "IRC Module Commands:\n!chans, !ignore, \
-!join, !nick, !part, !quit, !quitmsg, !reply2ignored, !replyrate, !shutup, \
+!join, !nick, !part, !quit, !quitmsg, !jump, !reply2ignored, !replyrate, !shutup, \
 !stealth, !unignore, !wakeup, !talk, !me, !owner"
     # Detailed command description dictionary
     commanddict = {
@@ -88,6 +88,7 @@ class ModIRC(SingleServerIRCBot):
             "quitmsg": "Owner command. Usage: !quitmsg [message]\nSet the quit message. Without arguments show the current quit message",
             "talk": "Owner command. Usage !talk nick message\nmake the bot send the sentence 'message' to 'nick'",
             "me": "Owner command. Usage !me nick message\nmake the bot send the sentence 'message' to 'nick'",
+            "jump": "Owner command. Usage: !jump\nMake the bot reconnect to IRC",
             "quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
             "owner": "Usage: !owner password\nAllow to become owner of the bot"
     }
@@ -493,6 +494,9 @@ class ModIRC(SingleServerIRCBot):
             # make the pyborg quit
             elif command_list[0] == "!quit":
                 sys.exit()
+            elif command_list[0] == "!jump":
+                print("Jumping servers...")
+                self.jump_server()
             # Change reply rate
             elif command_list[0] == "!replyrate":
                 try:

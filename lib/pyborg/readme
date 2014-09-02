@@ -44,6 +44,7 @@ orders which are usable all the time:
     * !help: post the whole of the orders available
     * !version: post the version of the bot
     * !quit: leave the program
+    * !jump: reconnect to IRC
     * !save: safeguard the dictionary and the files of configuration
 
     * !words: post the number of words and sentences known
