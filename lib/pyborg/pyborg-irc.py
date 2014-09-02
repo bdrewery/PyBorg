@@ -33,6 +33,8 @@ except:
 
 #overide irclib function
 def my_remove_connection(self, connection):
+    # XXX: Why is this here?
+    #self.connections.remove(connection)
     if self.fn_to_remove_socket:
         self.fn_to_remove_socket(connection._get_socket())
 
