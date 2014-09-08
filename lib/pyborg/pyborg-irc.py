@@ -259,8 +259,8 @@ class ModIRC(SingleServerIRCBot):
     def on_erroneusnickname(self, c, e):
         self._failed_new_nickname( c, e)
 
-    def on_unavailresource(self, c, e):
-        self._failed_new_nickname(c, e)
+#    def on_unavailresource(self, c, e):
+#        self._failed_new_nickname(c, e)
 
     def on_pubmsg(self, c, e):
         self.on_msg(c, e)
