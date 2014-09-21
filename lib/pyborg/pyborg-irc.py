@@ -119,7 +119,8 @@ class ModIRC(SingleServerIRCBot):
                   "reply_chance": ("Chance of reply (%) per message", 33),
                   "quitmsg": ("IRC quit message", "Bye :-("),
                   "password": ("password for control the bot (Edit manually !)", ""),
-                  "autosaveperiod": ("Save every X minutes. Leave at 0 for no saving.", 60)
+                  "autosaveperiod": ("Save every X minutes. Leave at 0 for no saving.", 60),
+                  "nickserv": ("username and password for nickserv", ("", ""))
                 })
 
         # If autosaveperiod is set, trigger it.
@@ -175,6 +176,11 @@ class ModIRC(SingleServerIRCBot):
 
     def on_welcome(self, c, e):
         print self.chans
+        if self.settings.nickserv and self.settings.nickserv[0] != '':
+            if len(self.settings.nickserv) == 2 and self.settings.nickserv[1] != '':
+                c.privmsg('NickServ', 'identify ' + self.settings.nickserv[0] + ' ' + self.settings.nickserv[1])
+            else:
+                c.privmsg('NickServ', 'identify ' + self.settings.nickserv)
         for i in self.chans:
             c.join(i)
 

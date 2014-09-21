@@ -128,6 +128,7 @@ pyborg-irc.cfg:
       be unaware of! unignore)
     * quit_message: message of exit to the disconnection
     * password: password for the order! owner
+    * nickserv: auth the bot, e.g. ("name", "password")
     * !speakin: 0 or 1 indicate if the bot must chatter on the channels, can be
       changed with the orders! shutup! wakeup
 
