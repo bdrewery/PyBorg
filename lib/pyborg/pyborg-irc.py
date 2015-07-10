@@ -323,6 +323,13 @@ class ModIRC(SingleServerIRCBot):
         if source == self.settings.myname: return
 
 
+        # We want replies reply_chance%, if speaking is on
+        replyrate = self.settings.speaking * self.settings.reply_chance
+
+        # double reply chance if the text contains our nickname :-)
+        if body.lower().find(self.settings.myname.lower()) != -1:
+            replyrate = replyrate * 2
+
         #replace nicknames by "#nick"
         if e.eventtype() == "pubmsg":
             escaped_users = map(re.escape, self.channels[target].users())
@@ -352,13 +359,6 @@ class ModIRC(SingleServerIRCBot):
         if body[0] == "<" or body[0:1] == "\"" or body[0:1] == " <":
             print "Ignoring quoted text"
             return
-
-        # We want replies reply_chance%, if speaking is on
-        replyrate = self.settings.speaking * self.settings.reply_chance
-
-        # double reply chance if the text contains our nickname :-)
-        if body.lower().find(self.settings.myname.lower()) != -1:
-            replyrate = replyrate * 2
 
         # Always reply to private messages
         if e.eventtype() == "privmsg":
