@@ -315,6 +315,11 @@ class ModIRC(SingleServerIRCBot):
         #remove special irc fonts chars
         body = re.sub("[\x02\xa0]", "", body)
 
+        isMe = False
+        if (body.lower().find(self.settings.myname.lower()) >= 0):
+            isMe = True
+            print("it is me")
+
         # WHOOHOOO!!
         if target == self.settings.myname or source == self.settings.myname:
             print "[%s] <%s> > %s> %s" % (get_time(), source, target, body)
@@ -357,7 +362,10 @@ class ModIRC(SingleServerIRCBot):
         replyrate = self.settings.speaking * self.settings.reply_chance
 
         # double reply chance if the text contains our nickname :-)
-        if body.lower().find(self.settings.myname.lower()) != -1:
+        #if self.settings.myname.lower() in body.lower():
+        print(body.lower())
+        print(self.settings.myname.lower())
+        if isMe:
             replyrate = replyrate * 2
 
         # Always reply to private messages
