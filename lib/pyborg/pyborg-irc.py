@@ -366,8 +366,7 @@ class ModIRC(SingleServerIRCBot):
         print(body.lower())
         print(self.settings.myname.lower())
         if isMe:
-            #replyrate = replyrate * 2
-            replyrate = 100
+            replyrate = replyrate * 2
 
         # Always reply to private messages
         if e.eventtype() == "privmsg":
