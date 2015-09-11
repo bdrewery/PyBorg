@@ -991,7 +991,8 @@ class pyborg:
         for x in xrange(0, len(sentence)):
             if sentence[x] == "'":
                 sentence[x - 1] = ""
-                sentence[x + 1] = ""
+                if x + 1 < len(sentence):
+                    sentence[x + 1] = ""
             for split_char in ['?', '!', ',']:
                 if sentence[x] == split_char:
                     sentence[x - 1] = ""
