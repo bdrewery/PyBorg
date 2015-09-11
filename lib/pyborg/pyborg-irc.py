@@ -322,6 +322,7 @@ class ModIRC(SingleServerIRCBot):
         # Ignore self.
         if source == self.settings.myname: return
 
+        body_contains_me = body.lower().find(self.settings.myname.lower()) != -1
 
         #replace nicknames by "#nick"
         if e.eventtype() == "pubmsg":
@@ -357,7 +358,7 @@ class ModIRC(SingleServerIRCBot):
         replyrate = self.settings.speaking * self.settings.reply_chance
 
         # double reply chance if the text contains our nickname :-)
-        if body.lower().find(self.settings.myname.lower()) != -1:
+        if body_contains_me:
             replyrate = replyrate * 2
 
         # Always reply to private messages
