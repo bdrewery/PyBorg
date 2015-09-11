@@ -1016,7 +1016,7 @@ class pyborg:
             if len(words) < 1:
                 return
 
-            voyelles = "aÃ Ã¢eÃ©Ã¨ÃªiÃ®Ã¯oÃ¶Ã´uÃ¼Ã»y"
+            voyelles = "aÃ Ã¢eÃ©Ã¨ÃªiÃ®Ã¯oÃ¶Ã´uÃ¼Ã»yaAeEiIoOuUyY"
             for x in xrange(0, len(words)):
 
                 nb_voy = 0
