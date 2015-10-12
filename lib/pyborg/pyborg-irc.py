@@ -92,8 +92,7 @@ class ModIRC(SingleServerIRCBot):
             "me": "Owner command. Usage !me nick message\nmake the bot send the sentence 'message' to 'nick'",
             "jump": "Owner command. Usage: !jump\nMake the bot reconnect to IRC",
             "quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
-            "prompted": "Owner command. Usage: !prompted\nMake the bot respond every time a message contains its name",
-            "notprompted": "Owner command. Usage: !notprompted\nMake the bot stop responding every time a message contains its name",
+            "prompted": "Owner command. Usage: !prompted [on|off]\nTurn prompted mode on or off (bot will respond every time a message contains its name)",
             "owner": "Usage: !owner password\nAllow to become owner of the bot"
     }
 
@@ -459,6 +458,24 @@ class ModIRC(SingleServerIRCBot):
                     else:
                         msg = msg + "off"
                         self.settings.reply2ignored = 0
+
+            # prompted mode
+            elif command_list[0] == "!prompted":
+                msg = "Prompted mode "
+                if len(command_list) == 1:
+                    if self.settings.prompted == 0:
+                        msg = msg + "off"
+                    else:
+                        msg = msg + "on"
+                else:
+                    toggle = command_list[1].lower()
+                    if toggle == "on":
+                        msg = msg + "on"
+                        self.settings.prompted = 1
+                    else:
+                        msg = msg + "off"
+                        self.settings.prompted = 0
+
             # Stop talking
             elif command_list[0] == "!shutup":
                 if self.settings.speaking == 1:
@@ -562,10 +579,6 @@ class ModIRC(SingleServerIRCBot):
                     for x in xrange (2, len (command_list)):
                         phrase = phrase + str(command_list[x]) + " "
                     self.output("\x01ACTION " + phrase + "\x01", ("", command_list[1], "", c, e))
-            elif command_list[0] == "!prompted":
-                self.settings.prompted = 1
-            elif command_list[0] == "!notprompted":
-                self.settings.prompted = 0
             # Save changes
             save_myname = self.settings.myname
             if self.wanted_myname is not None:
