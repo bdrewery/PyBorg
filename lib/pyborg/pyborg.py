@@ -328,6 +328,7 @@ class pyborg:
             elif self.settings.process_with == "megahal" and self.settings.learning == 1:
                 mh_python.learn(body)
 
+
         # Make a reply if desired
         if random.randint(0, 99) < replyrate:
 

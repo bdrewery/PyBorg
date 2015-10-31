@@ -378,9 +378,8 @@ class ModIRC(SingleServerIRCBot):
                 if self.irc_commands(body, source, target, c, e) == 1:return
 
         # Calculate delay
-        if len(self.settings.delay) == 1:
-            delay = self.settings.delay[0]
-        elif len(self.settings.delay) == 2:
+        delay = self.settings.delay[0]
+        if len(self.settings.delay) == 2:
             delay = random.randint(self.settings.delay[0], self.settings.delay[1])
 
 
