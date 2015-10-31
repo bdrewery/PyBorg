@@ -295,7 +295,7 @@ class pyborg:
             finally:
                 self.saving = False
 
-    def process_msg(self, io_module, body, replyrate, learn, args, owner = 0):
+    def process_msg(self, io_module, body, replyrate, learn, args, owner = 0, delay = 0):
         """
         Process message 'body' and pass back to IO module with args.
         If owner==1 allow owner commands.
@@ -328,9 +328,11 @@ class pyborg:
             elif self.settings.process_with == "megahal" and self.settings.learning == 1:
                 mh_python.learn(body)
 
-
         # Make a reply if desired
         if random.randint(0, 99) < replyrate:
+
+            if delay > 0:
+                time.sleep(delay)
 
             message = ""
 
