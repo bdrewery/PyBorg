@@ -25,7 +25,7 @@
 
 #############################################################################
 
-This version has been customzed so all data and configuration is stored into data/
+This version has been customized so all data and configuration is stored into data/
 To startup just run './start.sh'
 
 #############################################################################
@@ -91,7 +91,7 @@ The following orders are available only on IRC:
     * !chans: list the channels where the bot is connected
 
     * !ignore of [nick]: ignore nick
-    * !uningore [nick]: withdraw nick list of the people to be ignored
+    * !unignore [nick]: withdraw nick list of the people to be ignored
 
     * !owner password: allows to be added to the list of the owners (the
        password is defined in the file pyborg-irc.cfg)
