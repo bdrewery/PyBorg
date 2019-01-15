@@ -109,6 +109,7 @@ class ModIRC(SingleServerIRCBot):
                   "realname": ("Reported 'real name'", "Pyborg"),
                   "localaddress": ("Local IP to bind to", ""),
                   "ipv6": ("Whether to use IPv6", 0),
+                  "ssl": ("Whether to use SSL", 0),
                   "owners": ("Owner(s) nickname", [ "OwnerNick" ]),
                   "servers": ("IRC Server to connect to (server, port [,password])", [("irc.sucks.net", 6667)]),
                   "chans": ("Channels to auto-join", ["#cutie578"]),
@@ -168,7 +169,10 @@ class ModIRC(SingleServerIRCBot):
 
     def our_start(self):
         print "Connecting to server..."
-        SingleServerIRCBot.__init__(self, self.settings.servers, self.settings.myname, self.settings.realname, 2, self.settings.localaddress, self.settings.ipv6)
+        SingleServerIRCBot.__init__(self, self.settings.servers,
+                self.settings.myname, self.settings.realname, 2,
+                self.settings.localaddress, self.settings.ipv6,
+                self.settings.ssl)
 
         self.connection.execute_delayed(20, self._chan_checker)
         self.connection.execute_delayed(20, self._nick_checker)
