@@ -92,6 +92,7 @@ class ModIRC(SingleServerIRCBot):
             "me": "Owner command. Usage !me nick message\nmake the bot send the sentence 'message' to 'nick'",
             "jump": "Owner command. Usage: !jump\nMake the bot reconnect to IRC",
             "quit": "Owner command. Usage: !quit\nMake the bot quit IRC",
+            "prompted": "Owner command. Usage: !prompted [on|off]\nTurn prompted mode on or off (bot will respond every time a message contains its name)",
             "owner": "Usage: !owner password\nAllow to become owner of the bot"
     }
 
@@ -119,6 +120,7 @@ class ModIRC(SingleServerIRCBot):
                   "reply2ignored": ("Reply to ignored people", 0),
                   "reply_chance": ("Chance of reply (%) per message", 33),
                   "quitmsg": ("IRC quit message", "Bye :-("),
+                  "prompted": ("Respond whenever bot name is mentioned", 0),
                   "password": ("password for control the bot (Edit manually !)", ""),
                   "autosaveperiod": ("Save every X minutes. Leave at 0 for no saving.", 60),
                   "nickserv": ("username and password for nickserv", ("", ""))
@@ -370,6 +372,9 @@ class ModIRC(SingleServerIRCBot):
         # double reply chance if the text contains our nickname :-)
         if body_contains_me:
             replyrate = replyrate * 2
+            # always respond if prompted is true as well
+            if self.settings.prompted == 1:
+                replyrate = 100
 
         # Always reply to private messages
         if e.eventtype() == "privmsg":
@@ -457,6 +462,24 @@ class ModIRC(SingleServerIRCBot):
                     else:
                         msg = msg + "off"
                         self.settings.reply2ignored = 0
+
+            # prompted mode
+            elif command_list[0] == "!prompted":
+                msg = "Prompted mode "
+                if len(command_list) == 1:
+                    if self.settings.prompted == 0:
+                        msg = msg + "off"
+                    else:
+                        msg = msg + "on"
+                else:
+                    toggle = command_list[1].lower()
+                    if toggle == "on":
+                        msg = msg + "on"
+                        self.settings.prompted = 1
+                    else:
+                        msg = msg + "off"
+                        self.settings.prompted = 0
+
             # Stop talking
             elif command_list[0] == "!shutup":
                 if self.settings.speaking == 1:
