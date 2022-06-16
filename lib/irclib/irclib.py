@@ -63,6 +63,7 @@ Current limitations:
 """
 
 import bisect
+import errno
 import re
 import select
 import socket
@@ -211,7 +212,13 @@ class IRC:
         sockets = map(lambda x: x._get_socket(), self.connections)
         sockets = filter(lambda x: x != None, sockets)
         if sockets:
-            (i, o, e) = select.select(sockets, [], [], timeout)
+            while True:
+                try:
+                    (i, o, e) = select.select(sockets, [], [], timeout)
+                    break
+                except select.error, e:
+                    if e[0] == errno.EINTR:
+                        continue
             self.process_data(i)
         else:
             time.sleep(timeout)
