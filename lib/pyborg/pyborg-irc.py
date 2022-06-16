@@ -21,7 +21,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 
-import sys, time
+import errno, signal, sys, time
 from threading import Timer
 
 try:
@@ -47,6 +47,13 @@ import random
 import time
 import traceback
 import thread
+
+def sigterm_handler(_signo, _stack_frame):
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(devnull, sys.stdout.fileno())
+
+    # Raises SystemExit(0):
+    sys.exit(0)
 
 def get_time():
     """
@@ -692,6 +699,8 @@ if __name__ == "__main__":
         print
         sys.exit(0)
     # start the pyborg
+    signal.signal(signal.SIGTERM, sigterm_handler)
+    signal.signal(signal.SIGHUP, sigterm_handler)
     my_pyborg = pyborg.pyborg()
     bot = ModIRC(my_pyborg, sys.argv)
     try:
@@ -700,17 +709,40 @@ if __name__ == "__main__":
         pass
     except SystemExit, e:
         pass
+    except OSError, e:
+        if e.errno == errno.ENXIO or e.errno == errno.EPIPE or e.errno == errno.EINTR:
+            pass
+        else:
+            raise
+    except IOError, e:
+        if e.errno == errno.ENXIO or e.errno == errno.EPIPE or e.errno == errno.EINTR:
+            pass
+        else:
+            raise
     except:
         traceback.print_exc()
         c = raw_input("Ooops! It looks like Pyborg has crashed. Would you like to save its dictionary? (y/n) ")
         if c.lower()[:1] == 'n':
             sys.exit(0)
-    bot.autosave_stop()
-    bot.disconnect(bot.settings.quitmsg)
-    if my_pyborg.saving:
-        while my_pyborg.saving:
-            print "Waiting for save in other thread..."
-            time.sleep(1)
-    else:
-        my_pyborg.save_all()
-    del my_pyborg
+    try:
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        signal.signal(signal.SIGHUP, signal.SIG_IGN)
+        bot.autosave_stop()
+        bot.disconnect(bot.settings.quitmsg)
+        if my_pyborg.saving:
+            while my_pyborg.saving:
+                print "Waiting for save in other thread..."
+                time.sleep(1)
+        else:
+            my_pyborg.save_all()
+        del my_pyborg
+    except OSError, e:
+        if e.errno == errno.ENXIO or e.errno == errno.EPIPE or e.errno == errno.EINTR:
+            pass
+        else:
+            raise
+    except IOError, e:
+        if e.errno == errno.ENXIO or e.errno == errno.EPIPE or e.errno == errno.EINTR:
+            pass
+        else:
+            raise
