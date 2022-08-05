@@ -252,7 +252,7 @@ class pyborg:
                     print "Writing dictionary..."
 
                     with zipfile.ZipFile('archive.zip.tmp', 'w',
-                                         zipfile.ZIP_DEFLATED) as z:
+                                         zipfile.ZIP_DEFLATED, compresslevel=3) as z:
                         s = marshal.dumps(self.words)
                         z.writestr('words.dat', s)
                         del s
