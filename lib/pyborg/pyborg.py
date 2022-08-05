@@ -265,7 +265,7 @@ class pyborg:
                 if self.settings.process_with == "pyborg" and self.settings.no_save != "True":
                     print "Writing dictionary..."
 
-                    with zipfile.ZipFile('archive.zip', 'w',
+                    with zipfile.ZipFile('archive.zip.tmp', 'w',
                                          zipfile.ZIP_DEFLATED) as z:
                         s = marshal.dumps(self.words)
                         z.writestr('words.dat', s)
@@ -273,6 +273,7 @@ class pyborg:
                         z.writestr('lines.dat', s)
                         #save the version
                         z.writestr('version', self.saves_version)
+                    os.rename('archive.zip.tmp', 'archive.zip')
 
                     for filename, data in [
                                             ('words.txt', self.words),
@@ -294,6 +295,7 @@ class pyborg:
                     print "Dictionary saved."
                     return True
             finally:
+                os.unlink('archive.zip.tmp')
                 self.saving = False
 
     def process_msg(self, io_module, body, replyrate, learn, args, owner = 0):
