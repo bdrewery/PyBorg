@@ -281,7 +281,8 @@ class pyborg:
                     print "Dictionary saved."
                     return True
             finally:
-                os.unlink('archive.zip.tmp')
+                if os.path.exists('archive.zip.tmp'):
+                    os.unlink('archive.zip.tmp')
                 self.saving = False
 
     def process_msg(self, io_module, body, replyrate, learn, args, owner = 0):
