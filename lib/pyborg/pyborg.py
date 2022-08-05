@@ -161,30 +161,16 @@ class pyborg:
         if self.settings.process_with == "pyborg":
             print "Reading dictionary..."
             try:
-                zfile = zipfile.ZipFile('archive.zip', 'r')
-                for filename in zfile.namelist():
-                    data = zfile.read(filename)
-                    data_file = open(filename, 'w+b')
-                    data_file.write(data)
-                    data_file.close()
-            except (EOFError, IOError):
-                print "no zip found"
-            try:
+                with zipfile.ZipFile('archive.zip', 'r') as zfile:
+                    with zfile.open('version', 'r') as content:
+                        if content.read() != self.saves_version:
+                            print "Error loading dictionary\nPlease convert it before launching pyborg"
+                            sys.exit(1)
 
-                content = self.read_file("version")
-                os.unlink('version')
-                if content != self.saves_version:
-                    print "Error loading dictionary\Please convert it before launching pyborg"
-                    sys.exit(1)
-
-                content = self.read_file("words.dat")
-                os.unlink('words.dat')
-                self.words = marshal.loads(content)
-                del content
-                content = self.read_file("lines.dat")
-                os.unlink('lines.dat')
-                self.lines = marshal.loads(content)
-                del content
+                    with zfile.open('words.dat', 'r') as content:
+                            self.words = marshal.loads(content.read())
+                    with zfile.open('lines.dat', 'r') as content:
+                            self.lines = marshal.loads(content.read())
             except (EOFError, IOError):
                 # Create mew database
                 self.words = {}
