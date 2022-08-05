@@ -736,7 +736,7 @@ if __name__ == "__main__":
                 print "Waiting for save in other thread..."
                 time.sleep(1)
         else:
-            my_pyborg.save_all()
+            my_pyborg.save_all(exiting=True)
         del my_pyborg
     except OSError, e:
         if e.errno == errno.ENXIO or e.errno == errno.EPIPE or e.errno == errno.EINTR:

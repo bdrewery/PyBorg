@@ -241,7 +241,7 @@ class pyborg:
     ##
     # Saves all dictionaries and words and contexts, everything.
     # @return returns true if successfully saved, or false if it failed.
-    def save_all(self):
+    def save_all(self, exiting=False):
         if self.saving:
             print "Cannot save because currently saving."
             return False
@@ -255,8 +255,12 @@ class pyborg:
                                          zipfile.ZIP_DEFLATED) as z:
                         s = marshal.dumps(self.words)
                         z.writestr('words.dat', s)
+                        del s
                         s = marshal.dumps(self.lines)
+                        if exiting:
+                            del self.lines
                         z.writestr('lines.dat', s)
+                        del s
                         #save the version
                         z.writestr('version', self.saves_version)
                     os.rename('archive.zip.tmp', 'archive.zip')
